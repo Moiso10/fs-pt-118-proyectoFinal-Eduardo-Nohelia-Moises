@@ -1,8 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import useGlobalReducer from "../../hooks/useGlobalReducer";
 
 
 export const Navbar = () => {
+
+    const { store, dispatch } = useGlobalReducer();
+	const navigate = useNavigate()
+
+	const handleLogout = () => {
+		
+		dispatch({ type: "user_logged_out" });
+		
+		navigate("/");
+	};
+
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
@@ -30,12 +43,35 @@ export const Navbar = () => {
                         <li className="nav-item">
                             <Link to="/peliculas" className="nav-link">Películas</Link>
                         </li>
-                        <li className="nav-item">
-                            <Link to="/registro" className="nav-link">Registrarse</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
-                        </li>
+
+                        {store.auth ? (
+					// Si está logueado
+					<>
+						<li className="nav-item">
+							<Link to="/profile" className="nav-link">Perfil</Link>
+						</li>
+						<button 
+							className="btn btn-danger"
+							onClick={handleLogout}
+						>
+							Cerrar sesión
+						</button>
+					</>
+				) : (
+					// Si NO está logueado
+					<>
+						<li className="nav-item">
+							<Link to="/register" className="nav-link">Register</Link>
+						</li>
+						<li className="nav-tiem">
+							<Link to ="/login" className="nav-link">Login</Link>
+						</li>
+					</>
+				)}
+
+                        
+                       
+                        
                     </ul>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 //  pinta la tarjeta del usuario
-import "./profile.css";
+import "./ProfileViews.css";
 
 //componente React que recibe un unico prop: user
 export default function ProfileView({ user }) {
