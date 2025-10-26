@@ -41,6 +41,6 @@
   font-weight: 600;
 }
 
-/* Dark mode*/
+/* Dark mode friendly */
 .theme-dark .carrousel { box-shadow: 0 8px 24px rgba(0,0,0,.4); }
 .theme-dark .carrousel-slide { background: #0f1115; }

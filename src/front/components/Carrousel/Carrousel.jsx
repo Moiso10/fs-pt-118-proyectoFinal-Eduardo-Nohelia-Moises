@@ -2,23 +2,35 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./Carrousel.css";
 
 // Carrousel con 20 fotografías y delay de 10 segundos entre fotos
-export const Carrousel = () => {
+export const Carrousel = ({ onSlideChange }) => {
   // Cargar imágenes desde assets/carrousel usando Vite import.meta.glob
-  const modules = useMemo(() => (
-    import.meta.glob("../assets/carrousel/*.{jpg,jpeg,png,svg}", { eager: true })
+  const entries = useMemo(() => (
+    Object.entries(import.meta.glob("../assets/carrousel/*.{jpg,jpeg,png,svg}", { eager: true }))
   ), []);
-  const imagesFromAssets = useMemo(() => (
-    Object.values(modules).map((m) => m.default)
-  ), [modules]);
 
-  // Asegurar 20 imágenes repitiendo si hay menos
+  // Separar imágenes reales de placeholders (photoXX.svg)
+  const realImages = useMemo(() => (
+    entries
+      .filter(([path]) => !/photo\d+\.svg$/i.test(path))
+      .map(([, mod]) => mod.default)
+  ), [entries]);
+
+  const fallbackImages = useMemo(() => (
+    entries
+      .filter(([path]) => /photo\d+\.svg$/i.test(path))
+      .map(([, mod]) => mod.default)
+  ), [entries]);
+
+  // Construir lista final: prioridad realImages, completar con placeholders hasta 20
   const images = useMemo(() => {
-    const srcs = [];
-    while (srcs.length < 20 && imagesFromAssets.length > 0) {
-      srcs.push(...imagesFromAssets);
+    const srcs = [...realImages];
+    let i = 0;
+    while (srcs.length < 20 && fallbackImages.length > 0) {
+      srcs.push(fallbackImages[i % fallbackImages.length]);
+      i++;
     }
-    return (srcs.length ? srcs.slice(0, 20) : imagesFromAssets);
-  }, [imagesFromAssets]);
+    return srcs;
+  }, [realImages, fallbackImages]);
 
   const [index, setIndex] = useState(0);
   const timerRef = useRef(null);
@@ -34,6 +46,14 @@ export const Carrousel = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [images.length]);
+
+  // Notificar cambios de slide al padre
+  useEffect(() => {
+    if (!images || images.length === 0) return;
+    if (typeof onSlideChange === "function") {
+      onSlideChange(images[index], index);
+    }
+  }, [index, images, onSlideChange]);
 
   // Controles manuales
   const prev = () => setIndex((prev) => (prev - 1 + images.length) % images.length);

@@ -1,7 +1,7 @@
 /* Estilos Landingpage*/
 
 .landing {
-  background: linear-gradient(180deg, #100e1a 0%, #3322b9 33%, #3322b9 66%, #100e1a 100%);
+  background: linear-gradient(180deg, #574b8f 0%, #7060e7 33%, #7060e7 66%, rgb(52, 184, 129) 100%);
 }
 
 .landing-hero {
@@ -63,7 +63,7 @@
   .login-card {
     background-color: #1e2125;
     border-color: #2b3035;
-    color: #dee2e6;
+    color: #ec0909;
   }
   .landing-features .text-muted { color: #adb5bd !important; }
 }
@@ -71,16 +71,16 @@
 /* Dark mode: manual override via .theme-dark on <html> */
 .theme-dark .landing {
   background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
-  color: #e9ecef;
+  color: #efe9e9;
 }
 .theme-dark .landing-hero {
   background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(13, 110, 253, 0.18) 0%, transparent 60%),
+    radial-gradient(1200px 600px at 10% 10%, rgba(1, 11, 26, 0.18) 0%, transparent 60%),
     radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.18) 0%, transparent 60%);
 }
 .theme-dark .login-card {
   background-color: #1e2125;
-  border-color: #2b3035;
-  color: #dee2e6;
+  border-color: #1482f0;
+  color: #1380ee;
 }
-.theme-dark .landing-features .text-muted { color: #adb5bd !important; }
+.theme-dark .landing-features .text-muted { color: #ffffff !important; }
