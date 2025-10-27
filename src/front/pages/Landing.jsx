@@ -22,7 +22,7 @@ export const Landing = () => {
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-7">
-                <h1 className="display-4 mb-3">Bienvenido a MovieApp</h1>
+                <h1 className="display-4 mb-3">Bienvenido a MovieVerse</h1>
                 <p className="lead text-muted mb-4">
                   Descubre, guarda y disfruta de tus películas favoritas.
                 </p>

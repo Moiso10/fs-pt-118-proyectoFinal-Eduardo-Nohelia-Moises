@@ -5,7 +5,7 @@ import "./Carrousel.css";
 export const Carrousel = ({ onSlideChange }) => {
   // Cargar imágenes desde assets/carrousel usando Vite import.meta.glob
   const entries = useMemo(() => (
-    Object.entries(import.meta.glob("../assets/carrousel/*.{jpg,jpeg,png,svg}", { eager: true }))
+    Object.entries(import.meta.glob("../../assets/carrousel/*.{jpg,jpeg,png,svg}", { eager: true }))
   ), []);
 
   // Separar imágenes reales de placeholders (photoXX.svg)
