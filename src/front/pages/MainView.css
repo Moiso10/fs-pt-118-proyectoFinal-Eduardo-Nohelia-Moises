@@ -1,4 +1,4 @@
-/* 🎬 CONTENEDOR GENERAL */
+/* CONTENEDOR GENERAL */
 .mainview-container {
   background: radial-gradient(circle, #0d1117 0%, #010409 100%);
   color: white;
@@ -8,7 +8,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* 🎥 TÍTULO */
+/* TITULO */
 .title {
   font-size: 3rem;
   color: #ff2c2c;
@@ -19,7 +19,7 @@
   color: white;
 }
 
-/* 🎭 SELECTOR DE GÉNERO */
+/*  SELECTOR DE GENERO */
 .genre-select-container {
   display: flex;
   justify-content: center;
@@ -51,7 +51,7 @@
   outline: none;
 }
 
-/* 🔍 BARRA DE BÚSQUEDA */
+/*  BARRA DE BUSQUEDA */
 .search-bar {
   display: flex;
   justify-content: center;
@@ -85,7 +85,7 @@
   background: #ff4545;
 }
 
-/* 🎞️ CUADRÍCULA DE PELÍCULAS RESPONSIVE */
+/* GRID EN CUADRICULA DE PELiCULAS RESPONSIVE */
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -118,7 +118,7 @@
   margin-bottom: 1rem;
 }
 
-/* 🎬 BOTONES DETALLES / FAVORITOS */
+/* BOTONES DETALLES, FAVORITOS */
 .buttons {
   display: flex;
   justify-content: center;
@@ -143,7 +143,7 @@
   background: #ff4545;
 }
 
-/* 🧩 VISTA VISITANTE (NO LOGUEADO) */
+/*  VISTA VISITANTE (NO LOGUEADO) */
 .guest-register {
   margin-top: 2rem;
   text-align: center;
@@ -166,7 +166,7 @@
   background: #ff4646;
 }
 
-/* 📱 RESPONSIVE BREAKPOINTS */
+/* RESPONSIVE BREAKPOINTS */
 
 /* Tablets (2 por fila) */
 @media (max-width: 992px) {
@@ -179,7 +179,7 @@
   }
 }
 
-/* Móviles (1 por fila) */
+/* Movil (1 por fila) */
 @media (max-width: 600px) {
   .movies-grid {
     grid-template-columns: 1fr;

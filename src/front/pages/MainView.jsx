@@ -1,29 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react"; 
+import { Link } from "react-router-dom"; //crea el enlace sin recargar la pagina
 import { Context } from "../appContext";
-import { getPopularMovies, searchMovies } from "../services/tmdb";
+import { getPopularMovies, searchMovies } from "../services/tmdb"; //trae la funcion que conecta con la API de TMDB
 import "./MainView.css";
 
-export const MainView = () => {
-    const { store } = useContext(Context);
-    const isLogged = store.auth;
-    const [movies, setMovies] = useState([]);
-    const [query, setQuery] = useState("");
 
-    // 🧠 Cargar películas populares por defecto
+//
+export const MainView = () => {
+    const { store } = useContext(Context); ///accede al estado global del store
+    const isLogged = store.auth; // guarda el usuario si esta logueado
+    const [movies, setMovies] = useState([]); // crea el estado local para guardar las pelis que vienen de la api.
+    const [query, setQuery] = useState("");   //al principio esta vacio luego se llenara con setMovies(...)
+
+    //  Cargar peliculas populares por defecto
     useEffect(() => {
         async function loadMovies() {
-            const data = await getPopularMovies();
+            const data = await getPopularMovies(); //llama a la funcion que hace el fetch a TMDB
             setMovies(data);
         }
         loadMovies();
     }, []);
 
-    // 🔍 Buscar películas por título
+    // Busca peliculas por titulo
     const handleSearch = async (e) => {
         e.preventDefault();
         if (query.trim() === "") {
-            const data = await getPopularMovies(); // Si el campo está vacío, vuelve a populares
+            const data = await getPopularMovies(); // Si el campo esta vacio, vuelve a populares
             setMovies(data);
             return;
         }
@@ -39,7 +41,7 @@ export const MainView = () => {
                 </h1>
             </header>
 
-            {/* 🔍 Barra de búsqueda funcional */}
+            {/* Barra de busqueda */}
             <form className="search-bar" onSubmit={handleSearch}>
                 <input
                     type="text"
@@ -52,7 +54,7 @@ export const MainView = () => {
                 </button>
             </form>
 
-            {/* 🎞️ Cuadrícula de películas */}
+            {/*  grid de peliculas */}
             <div className="movies-grid">
                 {movies.length > 0 ? (
                     movies.slice(0, 6).map((movie) => (
@@ -83,7 +85,7 @@ export const MainView = () => {
                 )}
             </div>
 
-            {/* 👤 Si no está logueado */}
+            {/*  Si no esta logueado */}
             {!isLogged && (
                 <div className="guest-register">
                     <p>👋 Regístrate para guardar tus películas favoritas y más.</p>
