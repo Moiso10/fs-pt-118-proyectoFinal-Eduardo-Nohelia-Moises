@@ -1,0 +1,104 @@
+/* Carrusel 3D estilo coverflow, adaptado a imágenes 1920x1080 (16:9) */
+
+.carrousel {
+  width: 100%;
+  max-width: 1920px; /* se adapta pero no excede 1920px */
+  margin: 0 auto;
+  background: #000;
+  position: relative;
+}
+
+.carrousel-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(24px);
+  transform: scale(1.08); /* evita ver bordes al aplicar blur */
+  opacity: 0.6; /* leve oscurecido para resaltar la tarjeta central */
+  z-index: 0;
+}
+
+.carrousel-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Se adapta a 1920x1080 */
+  perspective: 1000px;
+  overflow: hidden;
+  z-index: 1;
+  max-height: 80vh; /* limita altura en pantallas bajas */
+}
+
+.carrousel-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 600ms ease, opacity 400ms ease;
+  will-change: transform, opacity;
+}
+
+.carrousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* evita recortes, letterbox apoyado por fondo blur */
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45), 0 10px 10px rgba(0, 0, 0, 0.35);
+}
+
+.carrousel-slide.is-active {
+  transform: translateZ(0) rotateY(0deg) scale(1.02);
+  z-index: 3;
+  opacity: 1;
+}
+
+.carrousel-slide.is-prev {
+  transform: translateX(-20%) rotateY(30deg) rotateZ(2deg) translateZ(-160px) scale(0.9);
+  z-index: 2;
+  opacity: 0.92;
+}
+
+.carrousel-slide.is-next {
+  transform: translateX(20%) rotateY(-30deg) rotateZ(-2deg) translateZ(-160px) scale(0.9);
+  z-index: 2;
+  opacity: 0.92;
+}
+
+.carrousel-slide.is-far {
+  transform: translateZ(-400px) scale(0.7);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carrousel-slide.is-prev,
+.carrousel-slide.is-next {
+  cursor: pointer;
+  filter: brightness(0.95) saturate(0.95);
+}
+
+.carrousel-controls {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 2;
+}
+
+.carrousel-indicator {
+  color: #fff;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .carrousel-slide.is-prev {
+    transform: translateX(-12%) rotateY(22deg) rotateZ(1.5deg) translateZ(-120px) scale(0.92);
+  }
+  .carrousel-slide.is-next {
+    transform: translateX(12%) rotateY(-22deg) rotateZ(-1.5deg) translateZ(-120px) scale(0.92);
+  }
+}

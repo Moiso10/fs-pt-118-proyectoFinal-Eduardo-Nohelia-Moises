@@ -1,0 +1,86 @@
+/* Estilos Landingpage*/
+
+.landing {
+  background: linear-gradient(180deg, #574b8f 0%, #7060e7 33%, #7060e7 66%, rgb(52, 184, 129) 100%);
+}
+
+.landing-hero {
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(13, 110, 253, 0.08) 0%, transparent 60%),
+              radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.08) 0%, transparent 60%);
+}
+
+.landing-hero h1 {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.landing-hero .lead {
+  color: #6c757d;
+}
+
+.login-card {
+  max-width: 380px;
+  margin-inline: auto;
+}
+
+.login-card .btn + .btn {
+  margin-left: .5rem;
+}
+
+.landing-features i {
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.landing-features .col-md-4:hover i {
+  transform: scale(1.08);
+  opacity: 0.9;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .landing-hero h1 {
+    font-size: 2rem;
+  }
+  .landing-hero .lead {
+    font-size: 1rem;
+  }
+  .login-card {
+    max-width: 100%;
+  }
+}
+
+/* Dark mode*/
+@media (prefers-color-scheme: dark) {
+  .landing {
+    background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
+    color: #e9ecef;
+  }
+  .landing-hero {
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(13, 110, 253, 0.18) 0%, transparent 60%),
+      radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.18) 0%, transparent 60%);
+  }
+  .login-card {
+    background-color: #1e2125;
+    border-color: #2b3035;
+    color: #ec0909;
+  }
+  .landing-features .text-muted { color: #adb5bd !important; }
+}
+
+/* Dark mode: manual override via .theme-dark on <html> */
+.theme-dark .landing {
+  background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
+  color: #efe9e9;
+}
+.theme-dark .landing-hero {
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(1, 11, 26, 0.18) 0%, transparent 60%),
+    radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.18) 0%, transparent 60%);
+}
+.theme-dark .login-card {
+  background-color: #1e2125;
+  border-color: #1482f0;
+  color: #1380ee;
+}
+.theme-dark .landing-features .text-muted { color: #ffffff !important; }
