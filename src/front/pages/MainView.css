@@ -179,7 +179,7 @@
   }
 }
 
-/* Movil (1 por fila) */
+/* Movils (1 por fila) */
 @media (max-width: 600px) {
   .movies-grid {
     grid-template-columns: 1fr;
