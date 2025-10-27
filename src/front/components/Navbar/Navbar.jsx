@@ -10,7 +10,7 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     dispatch({ type: "user_logged_out" });
-    navigate("/"); // 👈 redirige a la landing al cerrar sesión
+    navigate("/"); // 👈 redirige a la landing al cerrar sesion
   };
 
   return (
