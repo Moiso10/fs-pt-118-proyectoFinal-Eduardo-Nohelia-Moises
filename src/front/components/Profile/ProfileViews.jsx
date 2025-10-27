@@ -1,23 +1,106 @@
-//  pinta la tarjeta del usuario
-import "./profile.css";
+import { useEffect, useState } from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer";
+import "/src/front/pages/profile.css";
+import userServices from "../services/userServices";
 
-//componente React que recibe un unico prop: user
-export default function ProfileView({ user }) {
-  const name  = user?.name  || "Invitado";
-  const email = user?.email || "sin-email@example.com";
-  const avatar =
-    user?.avatar_url ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0ea5e9&color=fff`;
 
-  return (
-    <div className="profile-card">
-      <img className="profile-card__avatar" src={avatar} alt="avatar" />
-      <div className="profile-card__content">
-        <h2 className="profile-card__name">{name}</h2>
-        <p className="profile-card__email">{email}</p>
-        {user?.country && <span className="profile-card__tag">{user.country}</span>}
-        {user?.bio && <p className="profile-card__bio">{user.bio}</p>}
+
+
+
+
+const Profile = () =>{
+  const {store,dispatch} = useGlobalReducer()
+  const [formData,setFormData] = useState({
+    email:store.user.email || "",
+    username:store.user.username || "",
+    avatar:store.user.avatar || "",
+    preference:store.user.preference || ""
+  })
+
+
+
+  const handleChange =(e) =>{
+    const {name,value} = e.target;
+    setFormData({... formData,[name]: value})
+  };
+
+  const handleSave = async(e) =>{
+    e.preventDefault()
+
+    try {
+
+      const data = await userServices.updateProfile(formData)
+
+      if (data.success){
+        dispatch({ type: "update_user_profile" , payload: data.user})
+        alert("profile update success")
+      }
+      
+    } catch (error) {
+      console.log("error updating profile", error)
+      
+    }
+
+    
+  }
+
+  const handleDelete = async () => {
+    if (confirm("¿Seguro que deseas eliminar tu cuenta?")) {
+      await userServices.deleteAccount();
+      localStorage.removeItem("token");
+      dispatch({ type: "user_logged_out" });
+    }
+  };
+
+
+
+  return(
+     <div className="profile-container">
+      <h2>Perfil de Usuario</h2>
+      <div className="profile-card">
+        <div className="avatar-section">
+          <img src={formData.avatar} alt="Avatar" className="avatar" />
+          <input type="file" onChange={handleAvatarUpload} />
+          <p>Avatar</p>
+        </div>
+
+        <div className="info-section">
+          <label>Email</label>
+          <input type="email" value={formData.email} disabled />
+
+          <label>Alias</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+
+          <label>Preferencias (género)</label>
+          <input
+            type="text"
+            name="preference"
+            value={formData.preference}
+            onChange={handleChange}
+          />
+
+          <div className="buttons">
+            <button onClick={handleSave} className="btn save">Guardar Cambios</button>
+            <button onClick={handleDelete} className="btn delete">Eliminar Cuenta</button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                dispatch({ type: "user_logged_out" });
+              }}
+              className="btn logout"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  );
+  )
 }
+
+export default Profile
