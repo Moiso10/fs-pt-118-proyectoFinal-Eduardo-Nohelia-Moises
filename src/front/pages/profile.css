@@ -1,0 +1,66 @@
+/* Layout general */
+.profile-container {
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(180deg, #06141b 0%, #000 100%);
+}
+
+.profile-card {
+  background-color: #111;
+  border-radius: 15px;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.info-section {
+  text-align: left;
+  max-width: 400px;
+}
+
+.info-section input {
+  width: 100%;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  margin-right: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn.save {
+  background: red;
+  color: white;
+}
+
+.btn.delete {
+  background: crimson;
+}
+
+.btn.logout {
+  background: darkred;
+}

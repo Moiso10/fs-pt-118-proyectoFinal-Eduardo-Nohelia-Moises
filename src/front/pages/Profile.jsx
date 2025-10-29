@@ -1,76 +1,107 @@
 // src/front/pages/Profile.jsx
+import { useEffect, useState } from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 import "/src/front/pages/profile.css";
-import { useAuth } from "../hooks/useAuth.jsx"; // hook que trae user y loading guarda el usuario si hay token
+import userServices from "../services/userServices";
 
-export default function Profile() {  //lee al usuario actual con el hook
-  const { user, loading } = useAuth(); // true mienstras carga la info
 
-  //para que la pagina no se rompa si no hay usuarios..muestra un perfil explicando
-  const data = user || {
-    name: "Invitado",
-    email: "guest@example.com",
-    avatar: "",
-    country: "—",
-    bio: "Inicia sesión para ver y editar tu información real.",
+
+
+
+
+const Profile = () =>{
+  const {store,dispatch} = useGlobalReducer()
+  const [formData,setFormData] = useState({
+    email:store.user.email || "",
+    username:store.user.username || "",
+    avatar:store.user.avatar || "",
+    preference:store.user.preference || ""
+  })
+
+
+
+  const handleChange =(e) =>{
+    const {name,value} = e.target;
+    setFormData({... formData,[name]: value})
   };
 
-  const avatar =
-  (user?.avatar ?? data.avatar ?? user?.avatar_url ?? data.avatar_url ?? "") ||
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    data.name || "Invitado"
-  )}&background=0ea5e9&color=fff`;
-  
-  return (
-    <section className="profile-page">
-      <header className="profile-page__header">
-        <h1 className="profile-page__title">Mi perfil</h1>
-        {loading && <span className="profile-page__badge">Cargando…</span>}
-        {!user && !loading && (
-          <span className="profile-page__badge">Modo invitado</span>
-        )}
-      </header>
+  const handleSave = async(e) =>{
+    e.preventDefault()
 
-      <div className="profile-card" role="region" aria-label="Tarjeta de perfil">
-        <img className="profile-card__avatar" src={avatar} alt="Avatar" />
-        <div className="profile-card__content">
-          <h2 className="profile-card__name">{data.name}</h2>
-          <p className="profile-card__email">{data.email}</p>
-          <div className="profile-card__meta">
-            <span>
-              País: <strong>{data.country}</strong>
-            </span>
+    try {
+
+      const data = await userServices.updateProfile(formData)
+
+      if (data.success){
+        dispatch({ type: "update_user_profile" , payload: data.user})
+        alert("profile update success")
+      }
+      
+    } catch (error) {
+      console.log("error updating profile", error)
+      
+    }
+
+    
+  }
+
+  const handleDelete = async () => {
+    if (confirm("¿Seguro que deseas eliminar tu cuenta?")) {
+      await userServices.deleteAccount();
+      localStorage.removeItem("token");
+      dispatch({ type: "user_logged_out" });
+    }
+  };
+
+
+
+  return(
+     <div className="profile-container">
+      <h2>Perfil de Usuario</h2>
+      <div className="profile-card">
+        <div className="avatar-section">
+          <img src={formData.avatar} alt="Avatar" className="avatar" />
+          <input type="file" onChange={handleAvatarUpload} />
+          <p>Avatar</p>
+        </div>
+
+        <div className="info-section">
+          <label>Email</label>
+          <input type="email" value={formData.email} disabled />
+
+          <label>Alias</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+
+          <label>Preferencias (género)</label>
+          <input
+            type="text"
+            name="preference"
+            value={formData.preference}
+            onChange={handleChange}
+          />
+
+          <div className="buttons">
+            <button onClick={handleSave} className="btn save">Guardar Cambios</button>
+            <button onClick={handleDelete} className="btn delete">Eliminar Cuenta</button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                dispatch({ type: "user_logged_out" });
+              }}
+              className="btn logout"
+            >
+              Cerrar Sesión
+            </button>
           </div>
-          {data.bio && <p className="profile-card__bio">{data.bio}</p>}
         </div>
       </div>
-
-      <div className="profile-page__grid">
-        <div className="profile-page__card">
-          <h3>Preferencias</h3>
-          <ul className="profile-page__list">
-            <li>
-              Idioma: <strong>ES</strong>
-            </li>
-            <li>
-              Tema: <strong>Auto</strong>
-            </li>
-          </ul>
-        </div>
-        <div className="profile-page__card">
-          <h3>Actividad</h3>
-          <ul className="profile-page__list">
-            <li>
-              Reseñas: <strong>0</strong>
-            </li>
-            <li>
-              Favoritos: <strong>0</strong>
-            </li>
-            <li>
-              Vistas: <strong>0</strong>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
+    </div>
+  )
 }
+
+export default Profile

@@ -46,10 +46,111 @@ userServices.login = async(formData) =>{
         return data
         
     } catch (error) {
-        console.log(error)
+        console.log("error",error)
         
     }
 
 }
+
+userServices.getProfile = async (id) => {
+  try {
+    const resp = await fetch(url +"/api/profile/" + id, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!resp.ok) throw new Error("Error fetching profile");
+    const data = await resp.json();
+
+    return data;
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+
+userServices.updateProfile = async (formData) => {
+    try {
+        const resp = await fetch(url + '/api/profile', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token') 
+            },
+            body: JSON.stringify(formData)
+        })
+        if (!resp.ok) throw new Error('error updating profile')
+        const data = await resp.json()
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
+userServices.deleteAccount = async (id) => {
+  try {
+    
+    const res = await fetch(url + "/api/user/" + id, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer" + localStorage.getItem("token") },
+    });
+
+    if (!res.ok) throw new Error("Error delete account");
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default userServices
