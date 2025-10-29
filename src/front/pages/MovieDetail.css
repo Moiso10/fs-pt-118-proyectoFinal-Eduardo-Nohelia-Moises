@@ -1,10 +1,12 @@
+/*Contenedor principal de la vista de detalle */
+
 .movie-detail-container {
   min-height: 100vh;
   color: white;
   position: relative;
   background-color: #000;
 }
-
+/* Capa semitransparente encima del fondo */
 .movie-detail-overlay {
   width: 100%;
   height: 100%;
@@ -15,6 +17,7 @@
   align-items: center;
 }
 
+/*  Tarjeta que contiene toda la informacion poster y texto */
 .movie-detail-card {
   display: flex;
   flex-direction: row;
@@ -28,27 +31,30 @@
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
   animation: fadeInUp 0.6s ease;
 }
-
+/* Animacion suave para la aparacion de la tarjeta */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+
+/* Poster de la pelicula */
 .movie-detail-poster {
   width: 300px;
   border-radius: 10px;
 }
-
+/* Contenedor del texto */
 .movie-detail-info {
   flex: 1;
 }
-
+/* Titulo de la pelicula */
 .movie-detail-info h1 {
   color: #ff2c2c;
   font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 
+/* Descripcion / sinopsis */
 .movie-detail-overview {
   margin: 1rem 0;
   line-height: 1.6;
@@ -61,6 +67,7 @@
   gap: 0.8rem;
 }
 
+/* Contenedor de botones */
 .btn-red, .btn-fav {
   border: none;
   padding: 0.6rem 1.2rem;
@@ -70,6 +77,7 @@
   transition: 0.2s;
 }
 
+/* Estilo de botones */
 .btn-red {
   background: #ff2c2c;
   color: white;
@@ -106,6 +114,7 @@
   padding-top: 1rem;
 }
 
+/* Tarjeta de reseña */
 .review-card {
   background: #1e1e1e;
   padding: 1rem;
@@ -113,6 +122,8 @@
   margin-bottom: 1rem;
 }
 
+
+/* Cabecera de cada reseña*/
 .review-header {
   display: flex;
   justify-content: space-between;
@@ -120,10 +131,12 @@
   margin-bottom: 0.5rem;
 }
 
+/* Valoracion*/
 .review-stars {
   color: gold;
 }
 
+/* Campos del formulario  */
 .review-form input,
 .review-form textarea,
 .review-form input[type="number"] {
@@ -161,7 +174,7 @@
   font-style: italic;
   margin-top: 1.5rem;
 }
-
+/*  Adaptacion para moviles */
 @media (max-width: 768px) {
   .movie-detail-card {
     flex-direction: column;
@@ -170,10 +183,10 @@
   }
 
   .movie-detail-poster {
-    width: 220px;
+    width: 220px; /* Mas pequeño en pantallas pequeñas*/
   }
 
   .actions {
-    flex-direction: column;
+    flex-direction: column; /* Botones uno debajo de otro*/
   }
 }

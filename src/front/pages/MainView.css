@@ -85,7 +85,7 @@
   background: #ff4545;
 }
 
-/* GRID EN CUADRICULA DE PELiCULAS RESPONSIVE */
+/* GRID EN CUADRICULA DE PELICULAS RESPONSIVE */
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
