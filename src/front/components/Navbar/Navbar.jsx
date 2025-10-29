@@ -3,15 +3,28 @@ import { Link, useNavigate, useNavigate } from "react-router-dom";
 import movieVerseLogo from "../../assets/img/MovieVerse.png";
 import { Context } from "../../appContext";
 import "./Navbar.css";
+import useGlobalReducer from "../../hooks/useGlobalReducer";
 
 
 export const Navbar = () => {
-    return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container">
-                <Link to="/" className="navbar-brand mb-0 h1">
-                    React Boilerplate
-                </Link>
+
+  const { store, dispatch } = useGlobalReducer();
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+
+    dispatch({ type: "user_logged_out" });
+
+    navigate("/");
+  };
+
+
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <div className="container">
+        <Link to="/" className="navbar-brand mb-0">
+          <img src={movieVerseLogo} alt="MovieVerse" />
+        </Link>
 
         <button
           className="navbar-toggler"
@@ -25,23 +38,44 @@ export const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link to="/" className="nav-link">Inicio</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to="/peliculas" className="nav-link">Películas</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to="/registro" className="nav-link">Registrarse</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    );
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">Inicio</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/peliculas" className="nav-link">Películas</Link>
+            </li>
+
+            {store.auth ? (
+              // Si está logueado
+              <>
+                <li className="nav-item">
+                  <Link to="/profile" className="nav-link">Perfil</Link>
+                </li>
+                <button
+                  className="btn btn-danger"
+                  onClick={handleLogout}
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              // Si NO está logueado
+              <>
+                <li className="nav-item">
+                  <Link to="/register" className="nav-link">Register</Link>
+                </li>
+                <li className="nav-tiem">
+                  <Link to="/login" className="nav-link">Login</Link>
+                </li>
+              </>
+            )}
+
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
 };
