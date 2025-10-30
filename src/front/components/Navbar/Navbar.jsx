@@ -68,9 +68,7 @@ export const Navbar = () => {
 							<Link to ="/login" className="nav-link">Login</Link>
 						</li>
 					</>
-				)}
-
-                        
+				)}                    
                        
                         
                     </ul>
