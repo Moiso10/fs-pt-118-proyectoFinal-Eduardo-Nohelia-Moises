@@ -1,0 +1,118 @@
+.movies-container {
+  background: radial-gradient(circle, #0d1117 0%, #010409 100%);
+  color: white;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.movies-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.movies-header h1 {
+  color: #ff2c2c;
+  font-size: 2.5rem;
+}
+
+.search-bar {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.search-bar input {
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #222;
+  color: white;
+  width: 300px;
+  font-size: 1rem;
+}
+
+.search-bar button {
+  background: #ff2c2c;
+  color: white;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.search-bar button:hover {
+  background: #ff4545;
+}
+
+.movie-section {
+  margin-bottom: 3rem;
+}
+
+.movie-section h2 {
+  margin-bottom: 1rem;
+  text-align: left;
+  color: #fff;
+  border-left: 4px solid #ff2c2c;
+  padding-left: 10px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 👈 tres columnas fijas */
+  gap: 2rem;
+  justify-items: center;
+  align-items: start;
+}
+
+.movie-card {
+  background-color: #161b22;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 44, 44, 0.4);
+}
+
+.poster {
+  width: 100%;
+  height: 270px;
+  border-radius: 6px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 0.5rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-details,
+.btn-fav {
+  border: none;
+  background: #ff2c2c;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-details:hover,
+.btn-fav:hover {
+  background: #ff4646;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 3rem;
+}

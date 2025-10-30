@@ -80,6 +80,11 @@
   cursor: pointer;
   transition: background 0.2s ease-in-out;
 }
+.btn-fav.active {
+  background: #ff7b7b;
+  box-shadow: 0 0 8px #ff2c2c;
+  transform: scale(1.05);
+}
 
 .btn-search:hover {
   background: #ff4545;

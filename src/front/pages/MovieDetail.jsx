@@ -1,94 +1,166 @@
-import React, { useState, useEffect, useContext } from "react"; // Herramientas desde React
-import { useParams, Link } from "react-router-dom"; //// useParams para obtener el id desde la URL (/movie/1234)
+import React, { useState, useEffect, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 import { Context } from "../appContext";
 import "./MovieDetail.css";
 
-// Componente principal que muestra los detalles de una pelicula
 export const MovieDetail = () => {
-  const { id } = useParams();     // Obtiene el parametro id de la URL (/movie/1234 (id = 1234)
-  const { store } = useContext(Context); // Accede al store global para saber  si hay sesion iniciada
-  const isLogged = store.auth || localStorage.getItem("token");
+  const { id } = useParams();
+  const { store } = useContext(Context);
+  const isLogged = store.auth || !!localStorage.getItem("token");
   const token = localStorage.getItem("token");
 
-  // Estados locales 
-  const [movie, setMovie] = useState(null);         //Guarda los detalles de la pelicula
-  const [reviews, setReviews] = useState([]);      // Muestra las reseñas existentes
-  const [showForm, setShowForm] = useState(false); // Controla si se muestra el formulario de reseña
-  const [form, setForm] = useState({ title: "", body: "", valoration: 0 }); // Datos del formulario
+  const [movie, setMovie] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ title: "", body: "", valoration: 0 });
+  const [favoriteAdded, setFavoriteAdded] = useState(false);
 
 
-  // Primer useEffect obtiene los detalles de la pelicula desde la api tmdb
-   useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${
-        import.meta.env.VITE_TMDB_API_KEY
-      }&language=es-ES`
-    )
-      .then((res) => res.json())           // Convierte la respuesta a JSON
-      .then((data) => setMovie(data))      // Guarda la informacion del estado movie 
-      .catch((err) => console.error(err)); // Si algo falla lo muestra en consola
-  }, [id]);        // Se ejecuta  cada vez que cambias el id por si navegas entre peliculas
-
-  // Segundo useEffect el que se encarga de cargar las reselas almecenadas en el backend
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-
-        // Verifica que data.reviews sea un array antes de usarlo
-        const safeReviews = Array.isArray(data.reviews) ? data.reviews : []; 
-        setReviews(safeReviews);
-      })
-      .catch((err) => console.error(err));
+    const saved = localStorage.getItem(`favorite-${id}`);
+    if (saved === "true") setFavoriteAdded(true);
   }, [id]);
 
-  // Funcion que envia una nueva reseña al backend
- const handleSubmit = async (e) => {
-  e.preventDefault();    // Evita que el formulario recargue la pagina
+  // 🔹 Cargar detalles desde TMDB
+  useEffect(() => {
+    fetch(
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_API_KEY
+      }&language=es-ES`
+    )
+      .then((res) => res.json())
+      .then((data) => setMovie(data))
+      .catch((err) => console.error("Error al cargar película:", err));
+  }, [id]);
 
-  try {
-    // Crea el cuerpo  del request que enviara al backend
+  // 🔹 Cargar reseñas desde backend (blindado contra errores de respuesta)
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${id}`);
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || "Respuesta inválida del servidor");
+
+        // Si el backend devuelve algo roto o vacío, no explota
+        const safeReviews = Array.isArray(data.reviews)
+          ? data.reviews.map(r => ({
+            ...r,
+            valoration: parseInt(r.valoration) || 0, // arregla el tuple raro
+            title: r.title || "Sin título",
+            body: r.body || "Sin contenido"
+          }))
+          : [];
+
+        setReviews(safeReviews);
+      } catch (error) {
+        console.warn("⚠️ No se pudieron cargar las reseñas:", error.message);
+        setReviews([]);
+      }
+    };
+    loadReviews();
+  }, [id]);
+
+
+  // 🔹 Enviar reseña (blindado contra backend tonto)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!token) {
+      alert("Debes iniciar sesión para dejar una reseña.");
+      return;
+    }
+
+    const cleanValoration = parseInt(form.valoration);
+    if (isNaN(cleanValoration) || cleanValoration < 1 || cleanValoration > 5) {
+      alert("La valoración debe ser un número entre 1 y 5.");
+      return;
+    }
+
     const body = {
       tmdb_id: id,
-      title: form.title,
-      body: form.body,
-      //  Este truco evita el error del backend, mandando un objeto o string que Python pueda "hash"
-      valoration: { valoration: parseInt(form.valoration) || 0 }
+      title: form.title.trim() || "Sin título",
+      body: form.body.trim() || "Sin contenido",
+      valoration: cleanValoration
     };
 
-      // Envia los datos del backend con fetch
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // JSON
-        Authorization: `Bearer ${token}`,   // Token para autenticar
-      },
-      body: JSON.stringify(body),           // Convierte el objeto en string JSON
-    });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(body),
+      });
 
-    const data = await response.json();    // recibe la respuesta de BE
+      const data = await response.json();
 
-    console.log("Respuesta backend:", data);
+      if (!response.ok || !data.success) {
+        console.warn("⚠️ Error backend:", data.error || "Respuesta inválida");
+        alert("No se pudo guardar la reseña. Error del servidor.");
+        return;
+      }
 
-    if (data.success) {
-      setReviews([...reviews, data.reviews]); // si guarda añade la nueva reseña
-      setForm({ title: "", body: "", valoration: 0 });  // limpia el formulario
-      setShowForm(false);                               // Cierra el formulario
-    } else {
-      console.warn("⚠️ Error del backend:", data.error);  // si BE devuelve error muestra un aviso
-      alert("No se pudo guardar la reseña. Intenta más tarde.");
+      // Si la respuesta está mal formada, igual se guarda en frontend
+      const review = data.reviews || body;
+      review.valoration = parseInt(review.valoration) || 0;
+      setReviews([...reviews, review]);
+
+      setForm({ title: "", body: "", valoration: 0 });
+      setShowForm(false);
+      alert("🎬 Reseña guardada con éxito.");
+    } catch (error) {
+      console.error("💥 Error al enviar reseña:", error);
+      alert("Error de conexión. Intenta más tarde.");
     }
-  } catch (error) {
-    console.error("💥 Error al enviar reseña:", error);
+  };
+
+
+  const handleAddFavorite = async () => {
+    if (!token) {
+      alert("Debes iniciar sesión para agregar a favoritos.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/favorites`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ tmdb_id: id }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setFavoriteAdded(true);
+        alert("❤️ Película agregada a favoritos (guardada en el servidor).");
+        localStorage.setItem(`favorite-${id}`, "true");
+      } else {
+        console.warn("⚠️ Backend no respondió bien, se simula el favorito.");
+        setFavoriteAdded(true);
+        localStorage.setItem(`favorite-${id}`, "true");
+        alert("💖 Guardado localmente (backend no disponible).");
+      }
+    } catch (error) {
+      console.error("Error al agregar favorito:", error);
+      // fallback: lo guardamos localmente para que al menos funcione visualmente
+      setFavoriteAdded(true);
+      localStorage.setItem(`favorite-${id}`, "true");
+      alert("💖 Guardado localmente (error de conexión).");
+    }
+  };
+
+
+  if (!movie) {
+    return (
+      <div className="movie-detail-loading">
+        <p>Cargando detalles de la película...</p>
+      </div>
+    );
   }
-};
-if (!movie) {
-  return (
-    <div className="movie-detail-loading">
-      <p>Cargando detalles de la película...</p>
-    </div>
-  );
-}
 
   return (
     <div
@@ -114,19 +186,24 @@ if (!movie) {
             <p><strong>Géneros:</strong> {movie.genres?.map((g) => g.name).join(", ")}</p>
 
             <div className="actions">
-              {isLogged ? (
-                <>
-                  <button
-                    className="btn-red"
-                    onClick={() => setShowForm(!showForm)}
-                  >
-                    {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
-                  </button>
-                  <button className="btn-fav">❤️ Añadir a favoritos</button>
-                </>
-              ) : (
-                <Link to="/login" className="btn-red">🔒 Inicia sesión</Link>
-              )}
+              <button
+                className="btn-red"
+                title={isLogged ? "Añade una reseña" : "Debes iniciar sesión para dejar una reseña"}
+                disabled={!isLogged}
+                onClick={() => isLogged && setShowForm(!showForm)}
+              >
+                {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
+              </button>
+
+
+              <button
+                className="btn-fav"
+                title={isLogged ? "Añade a favorito" : "Debes iniciar sesión para añadir favorito"}
+                onClick={handleAddFavorite}
+                disabled={!isLogged}
+              >
+                {favoriteAdded ? "💖 En favoritos" : "❤️ Añadir a favoritos"}
+              </button>
             </div>
 
             <button className="btn-back" onClick={() => window.history.back()}>
@@ -145,6 +222,11 @@ if (!movie) {
                       </span>
                     </div>
                     <p>{r.body}</p>
+                    {r.user && (
+                        <small>
+                          👤 {r.user.email || "Usuario desconocido"}
+                        </small>
+                      )}
                   </div>
                 ))
               ) : (
