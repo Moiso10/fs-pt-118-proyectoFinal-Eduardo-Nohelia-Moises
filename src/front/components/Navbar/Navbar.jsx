@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import movieVerseLogo from "../../assets/img/MovieVerse.png";
 import "./Navbar.css";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 
@@ -19,8 +20,8 @@ export const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
-                <Link to="/" className="navbar-brand mb-0 h1">
-                    React Boilerplate
+                <Link to="/" className="navbar-brand mb-0">
+                    <img src={movieVerseLogo} alt="MovieVerse" />
                 </Link>
 
                 <button
