@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Context } from "../appContext";
+import { useParams } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 import "./MovieDetail.css";
 
 export const MovieDetail = () => {
   const { id } = useParams();
-  const { store } = useContext(Context);
+  const { store } = useGlobalReducer();
   const isLogged = store.auth || !!localStorage.getItem("token");
   const token = localStorage.getItem("token");
 
@@ -15,40 +15,48 @@ export const MovieDetail = () => {
   const [form, setForm] = useState({ title: "", body: "", valoration: 0 });
   const [favoriteAdded, setFavoriteAdded] = useState(false);
 
-
+  // 🔹 Revisar si ya está marcada como favorita (guardado local)
   useEffect(() => {
     const saved = localStorage.getItem(`favorite-${id}`);
     if (saved === "true") setFavoriteAdded(true);
   }, [id]);
 
-  // 🔹 Cargar detalles desde TMDB
+  // 🔹 Cargar detalles de película desde TMDB
   useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_API_KEY
-      }&language=es-ES`
-    )
-      .then((res) => res.json())
-      .then((data) => setMovie(data))
-      .catch((err) => console.error("Error al cargar película:", err));
+    const loadMovie = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${
+            import.meta.env.VITE_TMDB_API_KEY
+          }&language=es-ES`
+        );
+        const data = await res.json();
+        setMovie(data);
+      } catch (err) {
+        console.error("Error al cargar película:", err);
+      }
+    };
+    loadMovie();
   }, [id]);
 
-  // 🔹 Cargar reseñas desde backend (blindado contra errores de respuesta)
+  // 🔹 Cargar reseñas desde backend
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${id}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/reviews/${id}`
+        );
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.error || "Respuesta inválida del servidor");
+        if (!res.ok) throw new Error(data.error || "Error del servidor");
 
-        // Si el backend devuelve algo roto o vacío, no explota
         const safeReviews = Array.isArray(data.reviews)
-          ? data.reviews.map(r => ({
-            ...r,
-            valoration: parseInt(r.valoration) || 0, // arregla el tuple raro
-            title: r.title || "Sin título",
-            body: r.body || "Sin contenido"
-          }))
+          ? data.reviews.map((r) => ({
+              ...r,
+              valoration: parseInt(r.valoration) || 0,
+              title: r.title || "Sin título",
+              body: r.body || "Sin contenido",
+            }))
           : [];
 
         setReviews(safeReviews);
@@ -60,8 +68,7 @@ export const MovieDetail = () => {
     loadReviews();
   }, [id]);
 
-
-  // 🔹 Enviar reseña (blindado contra backend tonto)
+  // 🔹 Enviar reseña
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -80,18 +87,21 @@ export const MovieDetail = () => {
       tmdb_id: id,
       title: form.title.trim() || "Sin título",
       body: form.body.trim() || "Sin contenido",
-      valoration: cleanValoration
+      valoration: cleanValoration,
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/reviews`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       const data = await response.json();
 
@@ -101,11 +111,9 @@ export const MovieDetail = () => {
         return;
       }
 
-      // Si la respuesta está mal formada, igual se guarda en frontend
       const review = data.reviews || body;
       review.valoration = parseInt(review.valoration) || 0;
       setReviews([...reviews, review]);
-
       setForm({ title: "", body: "", valoration: 0 });
       setShowForm(false);
       alert("🎬 Reseña guardada con éxito.");
@@ -115,7 +123,7 @@ export const MovieDetail = () => {
     }
   };
 
-
+  // 🔹 Agregar a favoritos
   const handleAddFavorite = async () => {
     if (!token) {
       alert("Debes iniciar sesión para agregar a favoritos.");
@@ -123,36 +131,36 @@ export const MovieDetail = () => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/favorites`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ tmdb_id: id }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/favorites`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tmdb_id: id }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok && data.success) {
         setFavoriteAdded(true);
-        alert("❤️ Película agregada a favoritos (guardada en el servidor).");
         localStorage.setItem(`favorite-${id}`, "true");
+        alert("❤️ Película agregada a favoritos (guardada en el servidor).");
       } else {
-        console.warn("⚠️ Backend no respondió bien, se simula el favorito.");
         setFavoriteAdded(true);
         localStorage.setItem(`favorite-${id}`, "true");
         alert("💖 Guardado localmente (backend no disponible).");
       }
     } catch (error) {
       console.error("Error al agregar favorito:", error);
-      // fallback: lo guardamos localmente para que al menos funcione visualmente
       setFavoriteAdded(true);
       localStorage.setItem(`favorite-${id}`, "true");
       alert("💖 Guardado localmente (error de conexión).");
     }
   };
-
 
   if (!movie) {
     return (
@@ -188,17 +196,16 @@ export const MovieDetail = () => {
             <div className="actions">
               <button
                 className="btn-red"
-                title={isLogged ? "Añade una reseña" : "Debes iniciar sesión para dejar una reseña"}
+                title={isLogged ? "Añade una reseña" : "Debes iniciar sesión"}
                 disabled={!isLogged}
                 onClick={() => isLogged && setShowForm(!showForm)}
               >
                 {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
               </button>
 
-
               <button
                 className="btn-fav"
-                title={isLogged ? "Añade a favorito" : "Debes iniciar sesión para añadir favorito"}
+                title={isLogged ? "Añade a favorito" : "Debes iniciar sesión"}
                 onClick={handleAddFavorite}
                 disabled={!isLogged}
               >
@@ -222,11 +229,7 @@ export const MovieDetail = () => {
                       </span>
                     </div>
                     <p>{r.body}</p>
-                    {r.user && (
-                        <small>
-                          👤 {r.user.email || "Usuario desconocido"}
-                        </small>
-                      )}
+                    {r.user && <small>👤 {r.user.email || "Usuario desconocido"}</small>}
                   </div>
                 ))
               ) : (

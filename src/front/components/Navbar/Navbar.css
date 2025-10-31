@@ -1,9 +1,9 @@
 .navbar {
-  background: linear-gradient(90deg, #000000, #0f0f0f);
+  border-bottom: 1px solid #e9ecef;
 }
 
 .navbar-brand {
-  letter-spacing: 1px;
+  font-weight: 600;
 }
 
 /* Controlar tamaño y espaciado del logo de la marca */

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Context } from "../appContext";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 import { getPopularMovies, searchMovies } from "../services/tmdb";
 import "./MainView.css";
 
 export const MainView = () => {
-  const { store } = useContext(Context);
+ const { store } = useGlobalReducer();
   const isLogged = store.auth || !!localStorage.getItem("token");
 
   const [movies, setMovies] = useState([]);
@@ -65,18 +65,14 @@ export const MainView = () => {
       if (response.ok && data.success) {
         localStorage.setItem(`favorite-${movieId}`, "true");
         setMovies((prev) =>
-          prev.map((m) =>
-            m.id === movieId ? { ...m, favorite: true } : m
-          )
+          prev.map((m) => (m.id === movieId ? { ...m, favorite: true } : m))
         );
         alert(`💖 "${movie.title}" agregada a favoritos`);
       } else {
         console.warn("⚠️ Backend no respondió correctamente. Guardando localmente.");
         localStorage.setItem(`favorite-${movieId}`, "true");
         setMovies((prev) =>
-          prev.map((m) =>
-            m.id === movieId ? { ...m, favorite: true } : m
-          )
+          prev.map((m) => (m.id === movieId ? { ...m, favorite: true } : m))
         );
         alert(`💾 "${movie.title}" guardada localmente.`);
       }
