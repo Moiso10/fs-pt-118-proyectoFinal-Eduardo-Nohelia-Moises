@@ -12,6 +12,7 @@ import { Movies } from "./pages/Movies";
 import { Landing } from "./pages/Landing";
 import Profile from "./pages/Profile.jsx";
 import { MovieDetail } from "./pages/MovieDetail";
+import { MainView } from "./pages/MainView";
 import Auth from "./components/Login/Register/Auth.jsx";
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,7 @@ export const router = createBrowserRouter(
 
       {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
       <Route path="/" element={<Landing />} />
+      <Route path="/peliculas" element={<MainView />} />
       <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
       <Route path="/demo" element={<Demo />} />
       <Route path="/peliculas" element={<Movies />} />
