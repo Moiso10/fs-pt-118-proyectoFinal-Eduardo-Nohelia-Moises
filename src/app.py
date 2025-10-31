@@ -23,6 +23,11 @@ app.url_map.strict_slashes = False
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  
 jwt = JWTManager(app)
 
+cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME')
+api_key = os.getenv('CLOUDINARY_API_KEY')
+api_secret = os.getenv('CLOUDINARY_API_SECRET')
+
+
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
