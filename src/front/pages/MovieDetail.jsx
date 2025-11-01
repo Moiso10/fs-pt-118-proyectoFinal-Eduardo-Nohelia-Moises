@@ -15,13 +15,13 @@ export const MovieDetail = () => {
   const [form, setForm] = useState({ title: "", body: "", valoration: 0 });
   const [favoriteAdded, setFavoriteAdded] = useState(false);
 
-  // 🔹 Revisar si ya está marcada como favorita (guardado local)
+  // 🔹 Revisar si ya esta marcada como favorita
   useEffect(() => {
     const saved = localStorage.getItem(`favorite-${id}`);
     if (saved === "true") setFavoriteAdded(true);
   }, [id]);
 
-  // 🔹 Cargar detalles de película desde TMDB
+  // 🔹 Cargar detalles de pelicula desde TMDB
   useEffect(() => {
     const loadMovie = async () => {
       try {
@@ -193,25 +193,28 @@ export const MovieDetail = () => {
             <p><strong>Año:</strong> {movie.release_date?.split("-")[0]}</p>
             <p><strong>Géneros:</strong> {movie.genres?.map((g) => g.name).join(", ")}</p>
 
-            <div className="actions">
-              <button
-                className="btn-red"
-                title={isLogged ? "Añade una reseña" : "Debes iniciar sesión"}
-                disabled={!isLogged}
-                onClick={() => isLogged && setShowForm(!showForm)}
-              >
-                {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
-              </button>
+          {isLogged ? (
+  <div className="actions">
+    <button
+      className="btn-red"
+      onClick={() => setShowForm(!showForm)}
+    >
+      {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
+    </button>
 
-              <button
-                className="btn-fav"
-                title={isLogged ? "Añade a favorito" : "Debes iniciar sesión"}
-                onClick={handleAddFavorite}
-                disabled={!isLogged}
-              >
-                {favoriteAdded ? "💖 En favoritos" : "❤️ Añadir a favoritos"}
-              </button>
-            </div>
+    <button
+      className={`btn-fav ${favoriteAdded ? "active" : ""}`}
+      onClick={handleAddFavorite}
+    >
+      {favoriteAdded ? "💖 En favoritos" : "❤️ Añadir a favoritos"}
+    </button>
+  </div>
+) : (
+  <p className="login-warning">
+    🔒 Registrate o inicia sesión para dejar una reseña o agregar favoritos.
+  </p>
+)}
+
 
             <button className="btn-back" onClick={() => window.history.back()}>
               ← Volver
