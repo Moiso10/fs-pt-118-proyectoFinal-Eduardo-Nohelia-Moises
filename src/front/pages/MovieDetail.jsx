@@ -206,7 +206,7 @@ export const MovieDetail = () => {
       className={`btn-fav ${favoriteAdded ? "active" : ""}`}
       onClick={handleAddFavorite}
     >
-      {favoriteAdded ? "💖 En favoritos" : "❤️ Añadir a favoritos"}
+      {favoriteAdded ? "💖 favoritos" : "❤️ Añadir a favoritos"}
     </button>
   </div>
 ) : (
