@@ -2,6 +2,13 @@ export const initialStore=()=>{
   return{
     message: null,
      auth: localStorage.getItem('token')? true : false,
+     user: {
+      id: null,
+      email: "",
+      username: "",
+      avatar: "",
+      preference: ""
+    },
     todos: [
       {
         id: 1,
@@ -25,12 +32,25 @@ export default function storeReducer(store, action = {}) {
         user:action.payload
       };
 
+      case "update_user_profile":
+      return {
+        ...store,
+        user: { ...store.user, ...action.payload }, 
+      };
+
     
     case "user_logged_out":
       localStorage.removeItem("token")
       return{
         ...store,
-        auth:false
+        auth:false,
+        user: {
+      id: null,
+      email: "",
+      username: "",
+      avatar: "",
+      preference: ""
+    },
       };
     case "user_logged_in":
       return{

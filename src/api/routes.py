@@ -58,7 +58,7 @@ def register():
 def login():
     try:
         body= request.json
-        query=select(User)
+        query=select(User).where(User.email == body["email"])
         user = db.session.execute(query).scalar_one()
 
 
