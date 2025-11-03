@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "./MovieDetail.css";
+import { Favorites } from "../components/Favorites";
 
 export const MovieDetail = () => {
   const { id } = useParams();
@@ -14,7 +15,8 @@ export const MovieDetail = () => {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", body: "", valoration: 0 });
   const [favoriteAdded, setFavoriteAdded] = useState(false);
-
+  const [providers, setProviders] = useState([]); // plataformas
+  const [favoriteId, setFavoriteId] = useState(null);
   // 🔹 Revisar si ya esta marcada como favorita
   useEffect(() => {
     const saved = localStorage.getItem(`favorite-${id}`);
@@ -26,8 +28,7 @@ export const MovieDetail = () => {
     const loadMovie = async () => {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_API_KEY
           }&language=es-ES`
         );
         const data = await res.json();
@@ -52,11 +53,11 @@ export const MovieDetail = () => {
 
         const safeReviews = Array.isArray(data.reviews)
           ? data.reviews.map((r) => ({
-              ...r,
-              valoration: parseInt(r.valoration) || 0,
-              title: r.title || "Sin título",
-              body: r.body || "Sin contenido",
-            }))
+            ...r,
+            valoration: parseInt(r.valoration) || 0,
+            title: r.title || "Sin título",
+            body: r.body || "Sin contenido",
+          }))
           : [];
 
         setReviews(safeReviews);
@@ -67,6 +68,31 @@ export const MovieDetail = () => {
     };
     loadReviews();
   }, [id]);
+
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${import.meta.env.VITE_TMDB_API_KEY
+          }`
+        );
+        const data = await res.json();
+
+        // El país ES se usa para España (puedes cambiar a "US" o el tuyo)
+        const es = data.results?.ES;
+        if (es && es.flatrate) {
+          setProviders(es.flatrate);
+        } else {
+          setProviders([]);
+        }
+      } catch (err) {
+        console.error("Error al cargar plataformas:", err);
+      }
+    };
+
+    loadProviders();
+  }, [id]);
+
 
   // 🔹 Enviar reseña
   const handleSubmit = async (e) => {
@@ -123,44 +149,6 @@ export const MovieDetail = () => {
     }
   };
 
-  // 🔹 Agregar a favoritos
-  const handleAddFavorite = async () => {
-    if (!token) {
-      alert("Debes iniciar sesión para agregar a favoritos.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/favorites`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ tmdb_id: id }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setFavoriteAdded(true);
-        localStorage.setItem(`favorite-${id}`, "true");
-        alert("❤️ Película agregada a favoritos (guardada en el servidor).");
-      } else {
-        setFavoriteAdded(true);
-        localStorage.setItem(`favorite-${id}`, "true");
-        alert("💖 Guardado localmente (backend no disponible).");
-      }
-    } catch (error) {
-      console.error("Error al agregar favorito:", error);
-      setFavoriteAdded(true);
-      localStorage.setItem(`favorite-${id}`, "true");
-      alert("💖 Guardado localmente (error de conexión).");
-    }
-  };
 
   if (!movie) {
     return (
@@ -192,28 +180,45 @@ export const MovieDetail = () => {
             <p className="movie-detail-overview">{movie.overview}</p>
             <p><strong>Año:</strong> {movie.release_date?.split("-")[0]}</p>
             <p><strong>Géneros:</strong> {movie.genres?.map((g) => g.name).join(", ")}</p>
+            <h3>Plataformas disponibles:</h3>
+            <div className="providers" >
+              {providers.length > 0 ? (
+                providers.map((p) => (
+                  <a
+                    key={p.provider_id}
+                    href={`https://www.themoviedb.org/movie/${id}-watch`} // Enlace TMDb que redirige a la plataforma real
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="provider"
+                    title={`Ver en ${p.provider_name}`}
+                  >
+                    <img
+                      src={`https://image.tmdb.org/t/p/w92${p.logo_path}`}
+                      alt={p.provider_name}
+                    />
+                  </a>
+                ))
+              ) : (
+                <p>No disponible en plataformas conocidas.</p>
+              )}
+            </div>
 
-          {isLogged ? (
-  <div className="actions">
-    <button
-      className="btn-red"
-      onClick={() => setShowForm(!showForm)}
-    >
-      {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
-    </button>
+            {isLogged ? (
+              <div className="actions">
+                <button
+                  className="btn-red"
+                  onClick={() => setShowForm(!showForm)}
+                >
+                  {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
+                </button>
 
-    <button
-      className={`btn-fav ${favoriteAdded ? "active" : ""}`}
-      onClick={handleAddFavorite}
-    >
-      {favoriteAdded ? "💖 favoritos" : "❤️ Añadir a favoritos"}
-    </button>
-  </div>
-) : (
-  <p className="login-warning">
-    🔒 Registrate o inicia sesión para dejar una reseña o agregar favoritos.
-  </p>
-)}
+                <Favorites tmdbId={id} title={movie.title} mode="button" />
+              </div>
+            ) : (
+              <p className="login-warning">
+                🔒 Registrate o inicia sesión para dejar una reseña o agregar favoritos.
+              </p>
+            )}
 
 
             <button className="btn-back" onClick={() => window.history.back()}>
