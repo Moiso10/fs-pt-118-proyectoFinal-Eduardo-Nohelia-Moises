@@ -10,6 +10,10 @@ cloudinaryServices.uploadImage = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     const resp = await fetch(`${backendUrl}/api/upload`, {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+
+        },
         method: "POST",
         body: formData,
     });

@@ -4,6 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer";
 import "/src/front/pages/profile.css";
 import userServices from "../services/userServices";
 import CloudinaryComponent from "../components/cloudinary.component";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -12,19 +13,28 @@ import CloudinaryComponent from "../components/cloudinary.component";
 
 const Profile = () => {
   const { store, dispatch } = useGlobalReducer()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    email: store.user.email || "",
-    username: store.user.username || "",
-    avatar: store.user.avatar || "",
-    preference: store.user.preference || ""
+    email:store.profile.user?.email || "",
+    username:  store.profile?.username ||  "",
+    avatar: store.profile?.avatar || "",
+    preference: store.profile?.preference || ""
   })
 
+ 
 
+  
+  if (!store.profile) {
+    return <p>Cargando perfil...</p>;
+  }
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value })
   };
+
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -34,7 +44,7 @@ const Profile = () => {
       const data = await userServices.updateProfile(formData)
 
       if (data.success) {
-        dispatch({ type: "update_user_profile", payload: data.user })
+        dispatch({ type: "update_user_profile", payload: data.profile })
         alert("profile update success")
       }
 
@@ -53,6 +63,8 @@ const Profile = () => {
       dispatch({ type: "user_logged_out" });
     }
   };
+
+  
 
 
 
@@ -98,6 +110,7 @@ const Profile = () => {
               onClick={() => {
                 localStorage.removeItem("token");
                 dispatch({ type: "user_logged_out" });
+                navigate("/")
               }}
               className="btn logout"
             >

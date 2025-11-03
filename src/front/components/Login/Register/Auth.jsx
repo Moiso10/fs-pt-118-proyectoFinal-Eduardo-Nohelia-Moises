@@ -38,8 +38,10 @@ const Auth = ({mode}) =>{
 
                 if(data?.success){
                     localStorage.setItem("token",data.token);
-                    dispatch({ type: "user_logged_in"})
+                    localStorage.setItem("profile", JSON.stringify(data.data.profile))
+                    dispatch({ type: "set_user", payload: data.data.profile})
                     navigate("/")
+                    console.log(data)
                 }
             }else {
 
@@ -57,7 +59,7 @@ const Auth = ({mode}) =>{
             
         }
     }
-
+  
 
 
     return(

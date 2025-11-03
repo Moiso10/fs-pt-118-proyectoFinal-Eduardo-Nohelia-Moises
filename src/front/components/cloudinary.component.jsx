@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cloudinaryServices from "../services/cloudinaryServices.jsx";
 
 function CloudinaryComponent({onUploadSuccess}) {
@@ -8,9 +8,11 @@ function CloudinaryComponent({onUploadSuccess}) {
     const [error, setError] = useState("");
     const [response, setResponse] = useState(null);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
+   
+
+    useEffect(()=>{
+        const handleSubmit = async() =>{
+             setError("");
         if (!file) return setError("Selecciona una imagen");
 
         try {
@@ -25,13 +27,22 @@ function CloudinaryComponent({onUploadSuccess}) {
         } finally {
             setLoading(false);
         }
-    };
+        }
+        
+        if (file) {
+            handleSubmit()
+
+            
+        }
+
+
+    },[file])
 
     return (
         <div style={{ padding: 30 }}>
-            <h2>Subir imagen a Cloudinary</h2>
-            <h3>la direccion de la imagen almacenada la tienes en la respuesta del fetch</h3>
-            <form onSubmit={handleSubmit}>
+            
+            
+           
                 <input
                     type="file"
                     accept="image/*"
@@ -41,29 +52,10 @@ function CloudinaryComponent({onUploadSuccess}) {
                         setError("");
                     }}
                 />
-                <button type="submit" disabled={loading} style={{ marginLeft: 8 }}>
-                    {loading ? "Subiendo..." : "Subir"}
-                </button>
-            </form>
+            
 
             {error && <p style={{ color: "red" }}>{error}</p>}
-            {response && (
-                <div>
-                    <p>direccion de imagen en calendly:</p>
-                    <p>{response.url}</p>
-                </div>
-            )}
-            {url && (
-                <div style={{ marginTop: 20 }}>
-                    <p>Imagen subida:</p>
-                    <img src={url} alt="Uploaded" width="300" />
-                    <p>
-                        <a href={url} target="_blank" rel="noopener noreferrer">
-                            Abrir en nueva pestaña
-                        </a>
-                    </p>
-                </div>
-            )}
+           
         </div>
     );
 }
