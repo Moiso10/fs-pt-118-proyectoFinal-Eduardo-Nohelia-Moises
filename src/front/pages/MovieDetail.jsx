@@ -16,7 +16,8 @@ export const MovieDetail = () => {
   const [form, setForm] = useState({ title: "", body: "", valoration: 0 });
   const [favoriteAdded, setFavoriteAdded] = useState(false);
   const [providers, setProviders] = useState([]); // plataformas
-  const [favoriteId, setFavoriteId] = useState(null);
+  const [watched, setWatched] = useState(false);
+  const [watchedId, setWatchedId] = useState(null);
   // 🔹 Revisar si ya esta marcada como favorita
   useEffect(() => {
     const saved = localStorage.getItem(`favorite-${id}`);
@@ -150,6 +151,87 @@ export const MovieDetail = () => {
   };
 
 
+  const handleWatched = async (tmdb_id) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      if (!watched) {
+        // 👉 AÑADIR película vista
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/moviesviews/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tmdb_id }),
+        });
+        const data = await res.json();
+
+        // 🔹 Adaptación: tu backend devuelve "movies views"
+        const movieData = data["movies views"];
+
+        if (res.ok && data.success && movieData) {
+          setWatched(true);
+          setWatchedId(movieData.id); // guarda el id autoincremental
+        } else {
+          console.warn("⚠️ Error al marcar como vista:", data.message || data.error);
+        }
+      } else {
+        // 👉 ELIMINAR película vista por id autoincremental
+        if (!watchedId) {
+          return;
+        }
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/moviesviews/${watchedId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          setWatched(false);
+          setWatchedId(null);
+        } else {
+          console.warn("⚠️ Error al desmarcar:", data.message || data.error);
+        }
+      }
+    } catch (err) {
+      console.error("💥 Error en handleWatched:", err);
+    }
+  };
+
+
+  // 🔹 Verificar si esta película ya está en favoritos o vista
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const loadStatus = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/movie/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          setFavoriteAdded(!!data.favorite);
+          setWatched(!!data.watched);
+          if (data.watched && data.watched.id) {
+            setWatchedId(data.watched.id);
+          } else {
+            setWatchedId(null);
+          }
+        }
+      } catch (err) {
+        console.error("💥 Error al cargar estado de película:", err);
+      }
+    };
+
+    loadStatus();
+  }, [id]);
+
+
   if (!movie) {
     return (
       <div className="movie-detail-loading">
@@ -213,6 +295,13 @@ export const MovieDetail = () => {
                 </button>
 
                 <Favorites tmdbId={id} title={movie.title} mode="button" />
+                <button
+                  className="btn-red"
+                  onClick={() => handleWatched(id)}
+                >
+                  {watched ? "❌ Desmarcar como vista" : "👁️ Marcar como vista"}
+                </button>
+
               </div>
             ) : (
               <p className="login-warning">
@@ -220,10 +309,6 @@ export const MovieDetail = () => {
               </p>
             )}
 
-
-            <button className="btn-back" onClick={() => window.history.back()}>
-              ← Volver
-            </button>
 
             <div className="movie-reviews">
               <h3>Reseñas</h3>

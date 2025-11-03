@@ -34,3 +34,29 @@
   width: 100%;
   border-radius: 8px;
 }
+
+.watched-card {
+  text-decoration: none;
+  color: inherit;
+}
+.watched-card:hover {
+  transform: scale(1.03);
+  transition: transform 0.2s ease;
+}
+
+.btn-remove {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+  display: inline-block;
+}
+
+.btn-remove:hover {
+  background-color: #b02a37;
+}

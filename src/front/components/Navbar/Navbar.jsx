@@ -54,6 +54,9 @@ export const Navbar = () => {
                                 <li className="nav-item">
                                     <Link to="/favoritos" className="nav-link">Favoritos</Link>
                                 </li>
+                                <li className="nav-item">
+                                    <Link to="/watched" className="nav-link">Películas vistas</Link>
+                                </li>
                                 <button
                                     className="btn btn-danger"
                                     onClick={handleLogout}
