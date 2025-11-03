@@ -7,6 +7,8 @@ from flask_cors import CORS
 from sqlalchemy import select
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+import cloudinary
+import cloudinary.uploader
 
 
 api = Blueprint('api', __name__)
@@ -14,6 +16,43 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+
+@api.route("/upload", methods=["POST"])
+@jwt_required()
+def upload_image():
+    id = get_jwt_identity()
+    # Check if a file part is present in the request
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        #upload to cloudinary
+        #upload_result = cloudinary.uploader.upload(file)
+        upload_result = cloudinary.uploader.upload(
+            file,
+            folder="user_avatars"  # carpeta opcional para organizar imágenes
+        )
+        if(upload_result["secure_url"]):
+            query=select(Profile).where(Profile.user_id == id)
+            user = db.session.execute(query).scalar_one()
+
+            user.avatar = upload_result["secure_url"]
+            db.session.commit()
+
+    
+
+        #return the url of the uploaded image to be used in the frontend and/or stored in the database
+        return jsonify({
+            "url": upload_result["secure_url"],
+            "public_id": upload_result["public_id"]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 #------EndPoints User----------------------------------------
 
@@ -178,19 +217,24 @@ def get_one_profile_by_name(username):
 
 #-----------------endpoint obtener perfil por id------------------------------
 
-@api.route('/profile/<int:id>', methods=['GET'])
-def get_one_profile(id):
-    try:
-
-        profile = db.session.get(Profile,id)
-
-        if not profile:
-            return jsonify({'success':False, 'profile': 'No profile found'}),200
-        
-        return jsonify({'success':True , 'profile': profile.serialize()}),200
+@api.route('/profile', methods=['GET'])
+@jwt_required()
+def get_own_profile():
     
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+
+        if not user:
+            return jsonify({'success': False, 'message': 'Usuario no encontrado'}), 404
+
+        return jsonify({
+            'success': True,
+            'user': user.serialize()
+        }), 200
+
     except Exception as error:
-        return jsonify({'success': False, 'error':error}),500
+        return jsonify({'success': False, 'error': str(error)}), 500
     
 
 

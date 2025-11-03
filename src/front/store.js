@@ -2,13 +2,7 @@ export const initialStore=()=>{
   return{
     message: null,
      auth: localStorage.getItem('token')? true : false,
-     user: {
-      id: null,
-      email: "",
-      username: "",
-      avatar: "",
-      preference: ""
-    },
+     profile:JSON.parse(localStorage.getItem("profile")) || {} ,
     todos: [
       {
         id: 1,
@@ -26,6 +20,14 @@ export const initialStore=()=>{
 
 export default function storeReducer(store, action = {}) {
   switch(action.type){
+    case "set_user":
+  return {
+    ...store,
+    profile: action.payload,
+    auth: true, 
+  };
+
+
      case "save_user":
       return{
         ...store,
@@ -35,12 +37,13 @@ export default function storeReducer(store, action = {}) {
       case "update_user_profile":
       return {
         ...store,
-        user: { ...store.user, ...action.payload }, 
+        profile: { ...store.profile, ...action.payload }, 
       };
 
     
     case "user_logged_out":
       localStorage.removeItem("token")
+      localStorage.removeItem("profile")
       return{
         ...store,
         auth:false,
