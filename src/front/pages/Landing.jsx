@@ -52,7 +52,7 @@ export const Landing = () => {
                 <div className="login-card p-4 border rounded bg-white shadow-sm">
                   <h5 className="mb-2">¿Ya tienes cuenta?</h5>
                   <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
-                  <Link to="/profile" className="btn btn-primary">Ver Perfil (demo)</Link>
+                  
                 </div>
               </div>
             </div>
