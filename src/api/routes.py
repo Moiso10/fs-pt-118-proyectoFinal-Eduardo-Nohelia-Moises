@@ -691,3 +691,74 @@ def delete_moviesviews(id):
         return jsonify({'success': True, 'movie views':'movies views delete'}),200
     except Exception as error:
         return jsonify({'success': False, 'error':error})
+
+#---- Peliculas vistas por usuarios ----#
+# busca las peliculas que el usuario a marcado como vistas
+@api.route('/moviesviews/user', methods=['GET'])
+@jwt_required()
+def get_user_moviesviews():
+    try:
+        user_id = get_jwt_identity()
+        query = select(MoviesViews).filter_by(user_id=user_id)
+        moviesviews = db.session.execute(query).scalars().all()
+
+        if not moviesviews:
+            return jsonify({'success': True, 'moviesviews': []}), 200
+
+        moviesviews = [f.serialize() for f in moviesviews]
+        return jsonify({'success': True, 'moviesviews': moviesviews}), 200
+
+    except Exception as error:
+        return jsonify({'success': False, 'error': str(error)}), 500
+    
+
+#---- Eliminar pelicula vista por usuario ----#
+# Elimina la película vista en la tabla movie_views(MoviesViews), por id de movie_views
+@api.route('/moviesviews/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_moviesview(id):
+    try:
+
+        movies_views= db.session.get(MoviesViews,id)
+        
+        if not movies_views:
+            return jsonify({'success':False, 'movies views':'No movies views found'}),200
+        
+        db.session.delete(movies_views)
+        db.session.commit()
+
+        return jsonify({'success': True, 'movie views':'movies views delete'}),200
+    except Exception as error:
+        return jsonify({'success': False, 'error':error})
+    
+
+#---- Obtener los detalles de a película----#
+""" 
+Se buscan los detalles de la película
+tanto si esta en favoritos o en peliculas vistas
+"""
+@api.route('/user/movie/<int:tmdb_id>', methods=['GET'])
+@jwt_required()
+def get_user_movie_status(tmdb_id):
+    try:
+        user_id = get_jwt_identity()
+
+        # Buscar si esa película está en favoritos o vistas
+        favorite = Favorites.query.filter_by(user_id=user_id, tmdb_id=tmdb_id).first()
+        watched = MoviesViews.query.filter_by(user_id=user_id, tmdb_id=tmdb_id).first()
+
+        return jsonify({
+            "success": True,
+            "favorite": {
+                "id": favorite.id,
+                "tmdb_id": favorite.tmdb_id
+            } if favorite else None,
+            "watched": {
+                "id": watched.id,
+                "tmdb_id": watched.tmdb_id
+            } if watched else None
+        }), 200
+
+    except Exception as e:
+        print("❌ Error al verificar película:", e)
+        return jsonify({"success": False, "error": str(e)}), 500

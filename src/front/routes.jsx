@@ -34,7 +34,7 @@ export const router = createBrowserRouter(
       <Route path="/demo" element={<Demo />} />
       <Route path="/peliculas" element={<Movies />} />
       <Route path="/favoritos" element={<Favorites />} />
-      <Route path="/Watched" element={<Watched />} />
+      <Route path="/watched" element={<Watched />} />
       <Route path="/movie/:id" element={<MovieDetail />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element = {< Auth mode ="login" />} />
