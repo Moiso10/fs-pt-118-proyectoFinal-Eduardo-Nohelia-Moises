@@ -7,14 +7,14 @@ import useGlobalReducer from "../../hooks/useGlobalReducer";
 export const Navbar = () => {
 
     const { store, dispatch } = useGlobalReducer();
-	const navigate = useNavigate()
+    const navigate = useNavigate()
 
-	const handleLogout = () => {
-		
-		dispatch({ type: "user_logged_out" });
-		
-		navigate("/");
-	};
+    const handleLogout = () => {
+
+        dispatch({ type: "user_logged_out" });
+
+        navigate("/");
+    };
 
 
     return (
@@ -46,31 +46,37 @@ export const Navbar = () => {
                         </li>
 
                         {store.auth ? (
-					// Si está logueado
-					<>
-						<li className="nav-item">
-							<Link to="/profile" className="nav-link">Perfil</Link>
-						</li>
-						<button 
-							className="btn btn-danger"
-							onClick={handleLogout}
-						>
-							Cerrar sesión
-						</button>
-					</>
-				) : (
-					// Si NO está logueado
-					<>
-						<li className="nav-item">
-							<Link to="/register" className="nav-link">Register</Link>
-						</li>
-						<li className="nav-tiem">
-							<Link to ="/login" className="nav-link">Login</Link>
-						</li>
-					</>
-				)}                    
-                       
-                        
+                            // Si está logueado
+                            <>
+                                <li className="nav-item">
+                                    <Link to="/profile" className="nav-link">Perfil</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="/favoritos" className="nav-link">Favoritos</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="/watched" className="nav-link">Películas vistas</Link>
+                                </li>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={handleLogout}
+                                >
+                                    Cerrar sesión
+                                </button>
+                            </>
+                        ) : (
+                            // Si NO está logueado
+                            <>
+                                <li className="nav-item">
+                                    <Link to="/register" className="nav-link">Register</Link>
+                                </li>
+                                <li className="nav-tiem">
+                                    <Link to="/login" className="nav-link">Login</Link>
+                                </li>
+                            </>
+                        )}
+
+
                     </ul>
                 </div>
             </div>

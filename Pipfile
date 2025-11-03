@@ -20,8 +20,7 @@ wtforms = "==3.1.2"
 sqlalchemy = "*"
 flask-jwt-extended = "*"
 werkzeug = "*"
-flask-migrate = "*"
-cloudinary = "*"
+colorama = "*"
 
 [requires]
 python_version = "3.13"
