@@ -1,0 +1,62 @@
+.watched-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #000 0%, #111 100%);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.watched-container h1 {
+  font-size: 2.5rem;
+  color: #e50914;
+}
+
+.watched-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.watched-card {
+  background: #161b22;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s;
+}
+
+.watched-card:hover {
+  transform: scale(1.05);
+}
+
+.watched-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.watched-card {
+  text-decoration: none;
+  color: inherit;
+}
+.watched-card:hover {
+  transform: scale(1.03);
+  transition: transform 0.2s ease;
+}
+
+.btn-remove {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+  display: inline-block;
+}
+
+.btn-remove:hover {
+  background-color: #b02a37;
+}
