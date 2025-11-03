@@ -1,21 +1,46 @@
-/* Estilos Landingpage*/
+/* Estilos Landingpage (Dark por defecto) */
 
 .landing {
-  background: linear-gradient(180deg, #574b8f 0%, #7060e7 33%, #7060e7 66%, rgb(52, 184, 129) 100%);
+  background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
+  color: #e9ecef;
+  position: relative;
 }
 
-.landing-hero {
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(13, 110, 253, 0.08) 0%, transparent 60%),
-              radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.08) 0%, transparent 60%);
+.landing-bg {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  filter: blur(40px) opacity(0.35);
+  z-index: 0;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-hero,
+.landing-hero.bg-light {
+  background-color: #0f1115 !important;
+  background:
+    radial-gradient(900px 450px at 15% 20%, rgba(102, 178, 255, 0.18) 0%, transparent 60%),
+    radial-gradient(900px 450px at 85% 0%, rgba(187, 134, 252, 0.14) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+  color: #e6edf3;
+  border-top: 1px solid #1f2329;
+  border-bottom: 1px solid #1f2329;
 }
 
 .landing-hero h1 {
   font-weight: 700;
   letter-spacing: 0.3px;
+  color: #f5f7fa;
 }
 
+
 .landing-hero .lead {
-  color: #6c757d;
+  color: #ffffff;
 }
 
 .login-card {
@@ -27,6 +52,13 @@
   margin-left: .5rem;
 }
 
+.login-card,
+.login-card.bg-white {
+  background-color: #1e2125 !important;
+  border-color: #2b3035 !important;
+  color: #e9ecef;
+}
+
 .landing-features i {
   transition: transform .2s ease, opacity .2s ease;
 }
@@ -35,6 +67,8 @@
   transform: scale(1.08);
   opacity: 0.9;
 }
+
+.landing-features .text-muted { color: #adb5bd !important; }
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
@@ -48,39 +82,3 @@
     max-width: 100%;
   }
 }
-
-/* Dark mode*/
-@media (prefers-color-scheme: dark) {
-  .landing {
-    background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
-    color: #e9ecef;
-  }
-  .landing-hero {
-    background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(13, 110, 253, 0.18) 0%, transparent 60%),
-      radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.18) 0%, transparent 60%);
-  }
-  .login-card {
-    background-color: #1e2125;
-    border-color: #2b3035;
-    color: #ec0909;
-  }
-  .landing-features .text-muted { color: #adb5bd !important; }
-}
-
-/* Dark mode: manual override via .theme-dark on <html> */
-.theme-dark .landing {
-  background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
-  color: #efe9e9;
-}
-.theme-dark .landing-hero {
-  background:
-    radial-gradient(1200px 600px at 10% 10%, rgba(1, 11, 26, 0.18) 0%, transparent 60%),
-    radial-gradient(1000px 500px at 90% 0%, rgba(25, 135, 84, 0.18) 0%, transparent 60%);
-}
-.theme-dark .login-card {
-  background-color: #1e2125;
-  border-color: #1482f0;
-  color: #1380ee;
-}
-.theme-dark .landing-features .text-muted { color: #ffffff !important; }
