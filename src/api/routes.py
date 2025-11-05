@@ -564,7 +564,7 @@ def create_reviews_movieverse():
         reviews_movie_verse= ReviewsMovieVerse(
             title=body['title'],
             body=body['body'],
-            valoration=body['valoration',0],
+            valoration=body['valoration'],
             user_id= id
         )
         db.session.add(reviews_movie_verse)
@@ -573,7 +573,7 @@ def create_reviews_movieverse():
         return jsonify({'success': True, 'reviews':reviews_movie_verse.serialize()}),201
     except Exception as error:
         db.session.rollback()
-        return jsonify({'success': False, 'error':error}),500
+        return jsonify({'success': False, 'error':str(error)}),500
     
 
 
