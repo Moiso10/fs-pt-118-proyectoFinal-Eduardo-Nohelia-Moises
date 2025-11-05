@@ -154,3 +154,22 @@ userServices.deleteAccount = async (id) => {
 
 
 export default userServices
+ 
+// MovieVerse reviews services
+userServices.createMovieVerseReview = async (formData) => {
+  try {
+    const resp = await fetch(url + "/api/movieverse", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify(formData),
+    });
+    if (!resp.ok) throw new Error("Error creating MovieVerse review");
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

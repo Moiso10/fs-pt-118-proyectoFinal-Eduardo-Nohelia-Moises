@@ -38,6 +38,15 @@ const Auth = ({mode}) =>{
 
                 if(data?.success){
                     localStorage.setItem("token",data.token);
+                    const u = data?.data || {}
+                    const payload = {
+                        id: u?.id ?? null,
+                        email: u?.email ?? "",
+                        username: (u?.profile?.username) ?? (u?.email ? u.email.split('@')[0] : ""),
+                        avatar: u?.profile?.avatar ?? "",
+                        preference: u?.profile?.preference ?? ""
+                    }
+                    dispatch({ type: "save_user", payload })
                     dispatch({ type: "user_logged_in"})
                     navigate("/")
                 }
