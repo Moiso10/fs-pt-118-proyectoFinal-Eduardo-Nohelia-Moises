@@ -7,6 +7,8 @@ from flask_cors import CORS
 from sqlalchemy import select
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+import cloudinary
+import cloudinary.uploader
 
 
 api = Blueprint('api', __name__)
@@ -14,6 +16,43 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
+
+
+@api.route("/upload", methods=["POST"])
+@jwt_required()
+def upload_image():
+    id = get_jwt_identity()
+    # Check if a file part is present in the request
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        #upload to cloudinary
+        #upload_result = cloudinary.uploader.upload(file)
+        upload_result = cloudinary.uploader.upload(
+            file,
+            folder="user_avatars"  # carpeta opcional para organizar imágenes
+        )
+        if(upload_result["secure_url"]):
+            query=select(Profile).where(Profile.user_id == id)
+            user = db.session.execute(query).scalar_one()
+
+            user.avatar = upload_result["secure_url"]
+            db.session.commit()
+
+    
+
+        #return the url of the uploaded image to be used in the frontend and/or stored in the database
+        return jsonify({
+            "url": upload_result["secure_url"],
+            "public_id": upload_result["public_id"]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 #------EndPoints User----------------------------------------
 
@@ -178,19 +217,24 @@ def get_one_profile_by_name(username):
 
 #-----------------endpoint obtener perfil por id------------------------------
 
-@api.route('/profile/<int:id>', methods=['GET'])
-def get_one_profile(id):
-    try:
-
-        profile = db.session.get(Profile,id)
-
-        if not profile:
-            return jsonify({'success':False, 'profile': 'No profile found'}),200
-        
-        return jsonify({'success':True , 'profile': profile.serialize()}),200
+@api.route('/profile', methods=['GET'])
+@jwt_required()
+def get_own_profile():
     
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+
+        if not user:
+            return jsonify({'success': False, 'message': 'Usuario no encontrado'}), 404
+
+        return jsonify({
+            'success': True,
+            'user': user.serialize()
+        }), 200
+
     except Exception as error:
-        return jsonify({'success': False, 'error':error}),500
+        return jsonify({'success': False, 'error': str(error)}), 500
     
 
 
@@ -303,6 +347,70 @@ def delete_favorites():
     except Exception as error:
         return jsonify({'success': False, 'error':error})
     
+#---- eliminar un favorito por su id ----#  
+# se elimina un favorito en base a su id
+@api.route('/favorites/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_favorite(id):
+    try:
+   
+        favorite= db.session.get(Favorites,id)
+
+        if not favorite:
+            return jsonify({'success':False, 'favorites':'No favorites found'}),200
+        
+        db.session.delete(favorite)
+        db.session.commit()
+
+        return jsonify({'success': True, 'data':'favorites delete'}),200
+    except Exception as error:
+        return jsonify({'success': False, 'error':error})
+
+
+#---- favoritos por usuarios ----#
+# busca los favoritos del usuario
+@api.route('/favorites/user', methods=['GET'])
+@jwt_required()
+def get_user_favorites():
+    try:
+        user_id = get_jwt_identity()
+        query = select(Favorites).filter_by(user_id=user_id)
+        favorites = db.session.execute(query).scalars().all()
+
+        if not favorites:
+            return jsonify({'success': True, 'favorites': []}), 200
+
+        # 🚀 devuelve lista simple de tmdb_id
+        favorites_list = [f.serialize() for f in favorites]
+        return jsonify({'success': True, 'favorites': favorites_list}), 200
+
+    except Exception as error:
+        return jsonify({'success': False, 'error': str(error)}), 500
+
+#---- si la película esta en favorito del usuario ----#
+# busca un favorito por el tmbd_id y el usuario
+@api.route('/favorites/check/<int:tmdb_id>', methods=['GET'])
+@jwt_required()
+def check_favorite(tmdb_id):
+    try:
+        user_id = get_jwt_identity()
+        favorite = db.session.query(Favorites).filter_by(user_id=user_id, tmdb_id=tmdb_id).first()
+
+        if favorite:
+            return jsonify({
+                'success': True,
+                'is_favorite': True,
+                'favorite_id': favorite.id  # 👈 solo se accede si existe
+            }), 200
+        else:
+            return jsonify({
+                'success': True,
+                'is_favorite': False,
+                'favorite_id': None  # 👈 aquí evitamos el error
+            }), 200
+
+    except Exception as error:
+        return jsonify({'success': False, 'error': str(error)}), 500
 
 
 #----------------------endpoints reviews---------------------------------------------------------
@@ -357,7 +465,7 @@ def create_reviews():
         reviews= Reviews(
             title=body['title'],
             body=body['body'],
-            valoration=body['valoration',0],
+            valoration=body.get('valoration', 0),
             user_id= id,
             tmdb_id=body['tmdb_id']
             
@@ -627,3 +735,74 @@ def delete_moviesviews(id):
         return jsonify({'success': True, 'movie views':'movies views delete'}),200
     except Exception as error:
         return jsonify({'success': False, 'error':error})
+
+#---- Peliculas vistas por usuarios ----#
+# busca las peliculas que el usuario a marcado como vistas
+@api.route('/moviesviews/user', methods=['GET'])
+@jwt_required()
+def get_user_moviesviews():
+    try:
+        user_id = get_jwt_identity()
+        query = select(MoviesViews).filter_by(user_id=user_id)
+        moviesviews = db.session.execute(query).scalars().all()
+
+        if not moviesviews:
+            return jsonify({'success': True, 'moviesviews': []}), 200
+
+        moviesviews = [f.serialize() for f in moviesviews]
+        return jsonify({'success': True, 'moviesviews': moviesviews}), 200
+
+    except Exception as error:
+        return jsonify({'success': False, 'error': str(error)}), 500
+    
+
+#---- Eliminar pelicula vista por usuario ----#
+# Elimina la película vista en la tabla movie_views(MoviesViews), por id de movie_views
+@api.route('/moviesviews/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_moviesview(id):
+    try:
+
+        movies_views= db.session.get(MoviesViews,id)
+        
+        if not movies_views:
+            return jsonify({'success':False, 'movies views':'No movies views found'}),200
+        
+        db.session.delete(movies_views)
+        db.session.commit()
+
+        return jsonify({'success': True, 'movie views':'movies views delete'}),200
+    except Exception as error:
+        return jsonify({'success': False, 'error':error})
+    
+
+#---- Obtener los detalles de a película----#
+""" 
+Se buscan los detalles de la película
+tanto si esta en favoritos o en peliculas vistas
+"""
+@api.route('/user/movie/<int:tmdb_id>', methods=['GET'])
+@jwt_required()
+def get_user_movie_status(tmdb_id):
+    try:
+        user_id = get_jwt_identity()
+
+        # Buscar si esa película está en favoritos o vistas
+        favorite = Favorites.query.filter_by(user_id=user_id, tmdb_id=tmdb_id).first()
+        watched = MoviesViews.query.filter_by(user_id=user_id, tmdb_id=tmdb_id).first()
+
+        return jsonify({
+            "success": True,
+            "favorite": {
+                "id": favorite.id,
+                "tmdb_id": favorite.tmdb_id
+            } if favorite else None,
+            "watched": {
+                "id": watched.id,
+                "tmdb_id": watched.tmdb_id
+            } if watched else None
+        }), 200
+
+    except Exception as e:
+        print("❌ Error al verificar película:", e)
+        return jsonify({"success": False, "error": str(e)}), 500

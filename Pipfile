@@ -8,23 +8,27 @@ verify_ssl = true
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
+flask_migrate = "*"
 flask-swagger = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
 flask-cors = "*"
 gunicorn = "*"
-cloudinary = "*"
 flask-admin = "*"
 typing-extensions = "*"
 wtforms = "==3.1.2"
 sqlalchemy = "*"
 flask-jwt-extended = "*"
 werkzeug = "*"
+flask-migrate = "*"
+cloudinary = "*"
+colorama = "*"
 
 [requires]
 python_version = "3.13"
 
 [scripts]
+seeder="python src/seeder.py"
 start="flask run -p 3001 -h 0.0.0.0"
 init="flask db init"
 migrate="flask db migrate"

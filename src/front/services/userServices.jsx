@@ -52,11 +52,12 @@ userServices.login = async(formData) =>{
 
 }
 
-userServices.getProfile = async (id) => {
+userServices.getProfile = async () => {
   try {
-    const resp = await fetch(url +"/api/profile/" + id, {
+    const resp = await fetch(url +"/api/profile" , {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" , "Authorization": "Bearer " + localStorage.getItem('token')
+       },
     });
 
     if (!resp.ok) throw new Error("Error fetching profile");
