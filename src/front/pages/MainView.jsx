@@ -5,39 +5,37 @@ import { getPopularMovies, searchMovies } from "../services/tmdb";
 import "./MainView.css";
 import { Favorites } from "../components/Favorites"; //componente que maneja el boton de favoritos.
 import { markFavorites } from "../services/favorites"; //funcion que compara peliculas con la lista de favoritos del usuario logueado
-
+import { Loading } from "../components/Loading";
 export const MainView = () => { //crea y exporta el componente MainView
-  const { store } = useGlobalReducer(); 
+  const { store } = useGlobalReducer();
   const isLogged = store.auth || !!localStorage.getItem("token"); //comprueba si hay un usuario autenticado
-                                                                  // sea en el contexto o en localStorage
+  // sea en el contexto o en localStorage
 
   // Estados locales
   const [movies, setMovies] = useState([]); //almacena las peliculas que se mostraran
   const [genres, setGenres] = useState([]); //lista de generos que se obtienen de la api externa
   const [selectedGenre, setSelectedGenre] = useState(""); //guarda el genero actual filtrado
   const [query, setQuery] = useState(""); //texto deñ buscador
+  const [isLoading, setIsLoading] = useState(true); // 🔸 para el spinner
 
 
-
-  // 🔹 Cargar peliculas populares al inicio
-  useEffect(() => { // se ejecuta una sola vez para montar el componente
+  // 🔹 Cargar películas populares al inicio
+  useEffect(() => {
     async function loadMovies() {
       try {
-        const data = await getPopularMovies(); //Llama a getPopularMovies() y trae las peliculas populares desde la API
-
-        // 🔹 Marca automaticamente las favoritas del usuario logueado
-        const moviesWithFavorites = await markFavorites(data);  
-
-        // 🔹 Actualiza el estado de una sola vez
+        setIsLoading(true); // 🔹 activa el spinner
+        const data = await getPopularMovies();
+        const moviesWithFavorites = await markFavorites(data);
         setMovies(moviesWithFavorites);
       } catch (err) {
         console.error("💥 Error al cargar películas populares:", err);
+      } finally {
+        setIsLoading(false); // 🔹 apaga el spinner
       }
     }
 
     loadMovies();
   }, []);
-
 
   // 🔹 Cargar lista de generos desde tmdb
   useEffect(() => {
@@ -70,7 +68,7 @@ export const MainView = () => { //crea y exporta el componente MainView
 
       // Si el campo esta vacio, recarga las populares
       if (query.trim() === "") {
-        data = await getPopularMovies(); 
+        data = await getPopularMovies();
       } else {
         //si hay texto busca usando searchMovies(query) en TMDb
         data = await searchMovies(query);
@@ -117,6 +115,13 @@ export const MainView = () => { //crea y exporta el componente MainView
     }
   };
 
+  // 🌀 Mostrar spinner mientras carga
+  if (isLoading)
+    return (
+      <div className="mainview-container">
+        <Loading message="Cargando películas..." />
+      </div>
+    );
   return (
     <div className="mainview-container">
       <header className="mainview-header">

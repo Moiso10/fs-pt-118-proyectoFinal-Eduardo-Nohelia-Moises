@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Favorites.css";
+import { Loading } from "../components/Loading"; //spinner importado
+
 
 export const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // spinner nuevo estado de carga
   const navigate = useNavigate();
 
   async function fetchMovieDetails(tmdb_id) {
@@ -21,11 +24,13 @@ export const Favorites = () => {
     }
   }
 
+  // 🔹 Cargar lista de favoritos del usuario
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     async function loadFavorites() {
       try {
+        setIsLoading(true); // Activa el spinner
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/favorites/user`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -43,9 +48,12 @@ export const Favorites = () => {
           setFavorites(movies);
         } else {
           console.warn("⚠️ No se pudieron cargar los favoritos del backend");
+          setFavorites([]);
         }
       } catch (err) {
         console.error("💥 Error al cargar favoritos:", err);
+      } finally {
+        setIsLoading(false); //  Apaga el spinner
       }
     }
 
@@ -67,6 +75,14 @@ export const Favorites = () => {
     }
   };
 
+  // Muestra el spinner mientras carga
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Loading message="Cargando tus favoritos..." />
+      </div>
+    );
+  }
   return (
     <div className="favorites-container">
       <h1>💖 Mis Favoritos</h1>

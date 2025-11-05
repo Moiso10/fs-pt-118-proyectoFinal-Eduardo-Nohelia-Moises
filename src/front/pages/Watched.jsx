@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Watched.css";
+import { Loading } from "../components/Loading"; // 🌀 spinner de carga
+
 
 export const Watched = () => {
   const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // 🌀 para controlar el spinner
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     async function loadWatched() {
+      setIsLoading(true);
+
       try {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/moviesviews/user`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -37,7 +43,10 @@ export const Watched = () => {
         }
       } catch (err) {
         console.error("💥 Error al cargar películas vistas:", err);
+      } finally {
+        setIsLoading(false); // 🔹 apaga el spinner al terminar
       }
+
     }
 
     if (token) loadWatched();
@@ -66,6 +75,13 @@ export const Watched = () => {
     } catch (err) {
       console.error("💥 Error al eliminar:", err);
     }
+  }
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Loading message="Cargando tus películas vistas..." />
+      </div>
+    );
   }
 
   return (
