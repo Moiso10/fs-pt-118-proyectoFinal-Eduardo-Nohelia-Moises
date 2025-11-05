@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import userServices from "../../services/userServices";
+import useGlobalReducer from "../../hooks/useGlobalReducer";
+
 
 const MAX_LEN = 255;
 
 export default function Reviews({ open, onClose, onSubmitted, auth, currentUser }) {
+  const {store, dispatch} = useGlobalReducer();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -73,7 +76,7 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
             <button type="button" className="btn-close" aria-label="Close" onClick={handleCancel}></button>
           </div>
           <div className="modal-body">
-            <p className="text-muted mb-2">Comentando como @{alias}</p>
+            <p className="text-muted mb-2">Comentando como @{store.profile?.username || store.profile?.email}</p>
             {!auth && (
               <div className="alert alert-info" role="alert">
                 Debes iniciar sesión para puntuar y comentar.
