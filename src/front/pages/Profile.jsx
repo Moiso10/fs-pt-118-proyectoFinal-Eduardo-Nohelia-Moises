@@ -57,12 +57,20 @@ const Profile = () => {
   }
 
   const handleDelete = async () => {
-    if (confirm("¿Seguro que deseas eliminar tu cuenta?")) {
-      await userServices.deleteAccount();
+  if (!confirm("¿Seguro que deseas eliminar tu cuenta?")) return;
+
+  try {
+    const data = await userServices.deleteAccount();
+
       localStorage.removeItem("token");
       dispatch({ type: "user_logged_out" });
-    }
-  };
+      navigate("/login");
+   
+  } catch (error) {
+    console.log("Error eliminando la cuenta", error);
+  }
+  
+};
 
   
 

@@ -91,16 +91,16 @@ userServices.updateProfile = async (formData) => {
 
 
 
-userServices.deleteAccount = async (id) => {
+userServices.deleteAccount = async () => {
   try {
     
-    const res = await fetch(url + "/api/user/" + id, {
+    const res = await fetch(url + "/api/user" , {
       method: "DELETE",
-      headers: { Authorization: "Bearer" + localStorage.getItem("token") },
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
     });
 
     if (!res.ok) throw new Error("Error delete account");
-    return await res.json();
+    return true
   } catch (error) {
     console.error(error);
   }

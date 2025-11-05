@@ -14,11 +14,11 @@ class User(db.Model):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.utcnow)
     valoration:Mapped[int]=mapped_column(Integer,default=0)
-    profile: Mapped["Profile"] = relationship(back_populates="user",uselist=False)
-    favorites:Mapped[list["Favorites"]]=relationship(back_populates="user",uselist=True)
-    movie_view:Mapped[list["MoviesViews"]] = relationship(back_populates="user",uselist=True)
-    reviews:Mapped[list["Reviews"]]=relationship(back_populates="user",uselist=True)
-    reviews_movie_verse:Mapped[list["ReviewsMovieVerse"]] = relationship(back_populates="user",uselist=True)
+    profile: Mapped["Profile"] = relationship(back_populates="user",uselist=False,cascade="all, delete-orphan")
+    favorites:Mapped[list["Favorites"]]=relationship(back_populates="user",uselist=True,cascade="all, delete-orphan")
+    movie_view:Mapped[list["MoviesViews"]] = relationship(back_populates="user",uselist=True,cascade="all, delete-orphan")
+    reviews:Mapped[list["Reviews"]]=relationship(back_populates="user",uselist=True,cascade="all, delete-orphan")
+    reviews_movie_verse:Mapped[list["ReviewsMovieVerse"]] = relationship(back_populates="user",uselist=True, cascade="all, delete-orphan")
 
 
     def serialize(self):

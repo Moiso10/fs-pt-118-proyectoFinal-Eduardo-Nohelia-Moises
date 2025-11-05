@@ -160,13 +160,13 @@ def get_one_user(id):
 
 #-------endpoint eliminar usuario----------------------------
 
-@api.route('/user/<int:id>',methods=['DELETE'])
+@api.route('/user',methods=['DELETE'])
 @jwt_required()
 def delete_user():
     try:
 
-        user = db.session.get(User,id)
         id = get_jwt_identity()
+        user = db.session.get(User,id)
 
         if not user:
             return jsonify({'success': False, 'user':'No user'}),200
@@ -174,10 +174,10 @@ def delete_user():
         db.session.delete(user)
         db.session.commit()
 
-        return jsonify({'success':True, 'user': 'user delete'}),200
+        return jsonify({"msg": 'user delete'}),200
     
     except Exception as error:
-        return jsonify({'success':False, 'error':error}),500
+        return jsonify({'success':False, 'error':str(error)}),500
     
 
 #----------------endpoints profile--------------------------------------
