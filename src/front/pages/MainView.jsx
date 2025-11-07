@@ -1,29 +1,43 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useGlobalReducer from "../hooks/useGlobalReducer";
+import useGlobalReducer from "../hooks/useGlobalReducer"; //hook personalizado para acceder al estado global
 import { getPopularMovies, searchMovies } from "../services/tmdb";
 import "./MainView.css";
-
-export const MainView = () => {
+import { Favorites } from "../components/Favorites"; //componente que maneja el boton de favoritos.
+import { markFavorites } from "../services/favorites"; //funcion que compara peliculas con la lista de favoritos del usuario logueado
+import { Loading } from "../components/Loading";
+export const MainView = () => { //crea y exporta el componente MainView
   const { store } = useGlobalReducer();
-  const isLogged = store.auth || !!localStorage.getItem("token");
+  const isLogged = store.auth || !!localStorage.getItem("token"); //comprueba si hay un usuario autenticado
+  // sea en el contexto o en localStorage
 
-  const [movies, setMovies] = useState([]);
-  const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [query, setQuery] = useState("");
+  // Estados locales
+  const [movies, setMovies] = useState([]); //almacena las peliculas que se mostraran
+  const [genres, setGenres] = useState([]); //lista de generos que se obtienen de la api externa
+  const [selectedGenre, setSelectedGenre] = useState(""); //guarda el genero actual filtrado
+  const [query, setQuery] = useState(""); //texto deñ buscador
+  const [isLoading, setIsLoading] = useState(true); // 🔸 para el spinner
 
-  // 🔹 Cargar peliculas populares al inicio
+
+  // 🔹 Cargar películas populares al inicio
   useEffect(() => {
     async function loadMovies() {
-      const data = await getPopularMovies();
-      setMovies(data);
-      console.log("🎬 Películas cargadas:", data.length);
+      try {
+        setIsLoading(true); // 🔹 activa el spinner
+        const data = await getPopularMovies();
+        const moviesWithFavorites = await markFavorites(data);
+        setMovies(moviesWithFavorites);
+      } catch (err) {
+        console.error("💥 Error al cargar películas populares:", err);
+      } finally {
+        setIsLoading(false); // 🔹 apaga el spinner
+      }
     }
+
     loadMovies();
   }, []);
 
-  // 🔹 Cargar lista de generos
+  // 🔹 Cargar lista de generos desde tmdb
   useEffect(() => {
     async function loadGenres() {
       try {
@@ -31,124 +45,83 @@ export const MainView = () => {
           "https://api.themoviedb.org/3/genre/movie/list?language=es-ES",
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+              Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`, //usa el token de acceso guardado en .env
             },
           }
         );
         const data = await res.json();
         setGenres(data.genres || []);
       } catch (err) {
-        console.error("Error al cargar géneros:", err);
+        console.error("Error al cargar géneros:", err);  //si hay error se muestra en consola
       }
     }
     loadGenres();
   }, []);
 
-  // 🔹 Buscar peliculas por titulo / actor / año
+
+  // 🔹 Buscar peliculas por titulo, actor, año
   const handleSearch = async (e) => {
-    e.preventDefault();
-    if (query.trim() === "") {
-      const data = await getPopularMovies();
-      setMovies(data);
-      return;
+    e.preventDefault(); //evita que se recargue la pagina
+
+    try {
+      let data;
+
+      // Si el campo esta vacio, recarga las populares
+      if (query.trim() === "") {
+        data = await getPopularMovies();
+      } else {
+        //si hay texto busca usando searchMovies(query) en TMDb
+        data = await searchMovies(query);
+      }
+
+      // Marca favoritas en la misma llamada y actualiza
+      const moviesWithFavorites = await markFavorites(data);
+      setMovies(moviesWithFavorites);
+    } catch (err) {
+      console.error("💥 Error al buscar películas:", err);
     }
-    const results = await searchMovies(query);
-    setMovies(results);
   };
 
   // 🔹 Filtrar por genero
   const handleGenreChange = async (e) => {
     const genreId = e.target.value;
-    setSelectedGenre(genreId);
-
-    if (genreId === "") {
-      const data = await getPopularMovies();
-      setMovies(data);
-      return;
-    }
+    setSelectedGenre(genreId); //se ejecuta cada vez que usuario cambia de genero en el select
 
     try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&language=es-ES&page=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
-          },
-        }
-      );
-      const data = await res.json();
-      setMovies(data.results || []);
-    } catch (err) {
-      console.error("Error al filtrar por género:", err);
-    }
-  };
+      let moviesData;
 
-  // 🔹 Añadir a favoritos
-  const handleAddFavorite = async (movieId) => {
-    console.log("🩷 Click detectado en película:", movieId);
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Debes iniciar sesión para agregar a favoritos.");
-      return;
-    }
-
-    const movie = movies.find((m) => m.id === movieId);
-    if (!movie) return;
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/favorites`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ tmdb_id: movieId }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        localStorage.setItem(`favorite-${movieId}`, "true");
-        setMovies((prev) =>
-          prev.map((m) => (m.id === movieId ? { ...m, favorite: true } : m))
-        );
-        alert(`💖 "${movie.title}" agregada a favoritos`);
+      // 🔹 Si el usuario borra el filtro vuelve y recarga las populares
+      if (genreId === "") {
+        moviesData = await getPopularMovies();
       } else {
-        console.warn("⚠️ Backend no respondió correctamente. Guardando localmente.");
-        localStorage.setItem(`favorite-${movieId}`, "true");
-        setMovies((prev) =>
-          prev.map((m) => (m.id === movieId ? { ...m, favorite: true } : m))
+        // 🔹 Cargar peliculas del genero desde TMDB
+        const res = await fetch(
+          `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&language=es-ES&page=1`,
+          {
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+            },
+          }
         );
-        alert(`💾 "${movie.title}" guardada localmente.`);
+        const data = await res.json();
+        moviesData = data.results || [];
       }
-    } catch (error) {
-      console.error("💥 Error al agregar favorito:", error);
-      localStorage.setItem(`favorite-${movieId}`, "true");
-      setMovies((prev) =>
-        prev.map((m) => (m.id === movieId ? { ...m, favorite: true } : m))
-      );
-      alert(`💾 "${movie.title}" guardada localmente (sin conexión).`);
+
+      // 🔹 Marca automáticamente las favoritas
+      const moviesWithFavorites = await markFavorites(moviesData);
+      setMovies(moviesWithFavorites);
+    } catch (err) {
+      console.error("💥 Error al filtrar por género:", err);
     }
   };
 
-  // 🔹 Restaurar favoritos desde localStorage
-  useEffect(() => {
-    const savedFavorites = Object.keys(localStorage)
-      .filter((key) => key.startsWith("favorite-"))
-      .map((key) => parseInt(key.replace("favorite-", "")));
-
-    setMovies((prev) =>
-      prev.map((m) => ({
-        ...m,
-        favorite: savedFavorites.includes(m.id),
-      }))
+  // 🌀 Mostrar spinner mientras carga
+  if (isLoading)
+    return (
+      <div className="mainview-container">
+        <Loading message="Cargando películas..." />
+      </div>
     );
-  }, [movies.length]);
-
   return (
     <div className="mainview-container">
       <header className="mainview-header">
@@ -157,9 +130,11 @@ export const MainView = () => {
         </h1>
       </header>
 
-      {/* FILTRO DE GENERO */}
+      {/* FILTRO DE GÉNERO */}
       <div className="genre-select-container">
-        <label htmlFor="genre-select" className="genre-label">🎬 Género:</label>
+        <label htmlFor="genre-select" className="genre-label">
+          🎬 Género:
+        </label>
         <select
           id="genre-select"
           className="genre-select"
@@ -174,8 +149,13 @@ export const MainView = () => {
           ))}
         </select>
       </div>
+      {!isLogged && (
+        <div className="guest-register">
+          <p>👋 Regístrate para guardar tus películas favoritas y más.</p>
+        </div>
+      )}
 
-      {/* Barra de busqueda  */}
+      {/* Barra de búsqueda */}
       {selectedGenre && (
         <form className="search-bar" onSubmit={handleSearch}>
           <input
@@ -190,7 +170,7 @@ export const MainView = () => {
         </form>
       )}
 
-      {/* GRID de peliculas */}
+      {/* GRID de películas */}
       <div className="movies-grid">
         {movies.length > 0 ? (
           movies.slice(0, 9).map((movie) => (
@@ -201,8 +181,6 @@ export const MainView = () => {
                   backgroundImage: movie.poster_path
                     ? `url(https://image.tmdb.org/t/p/w500${movie.poster_path})`
                     : "url(https://via.placeholder.com/500x750?text=Sin+imagen)",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                 }}
               ></div>
 
@@ -213,16 +191,8 @@ export const MainView = () => {
                   <button className="btn-details">Detalles</button>
                 </Link>
 
-                {isLogged && (
-                  <button
-                    className={`btn-fav ${movie.favorite ? "active" : ""}`}
-                    onClick={() => handleAddFavorite(movie.id)}
-                  >
-                    {movie.favorite
-                      ? "💖 En favoritos"
-                      : "❤️ Añadir a favoritos"}
-                  </button>
-                )}
+                {isLogged && <Favorites tmdbId={movie.id} title={movie.title} mode="button" />}
+
               </div>
             </div>
           ))
@@ -230,15 +200,6 @@ export const MainView = () => {
           <p>No se encontraron resultados 😢</p>
         )}
       </div>
-
-      {!isLogged && (
-        <div className="guest-register">
-          <p>👋 Regístrate para guardar tus películas favoritas y más.</p>
-          <Link to="/register">
-            <button className="btn-register">Registrarse</button>
-          </Link>
-        </div>
-      )}
     </div>
   );
 };

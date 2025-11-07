@@ -52,11 +52,12 @@ userServices.login = async(formData) =>{
 
 }
 
-userServices.getProfile = async (id) => {
+userServices.getProfile = async () => {
   try {
-    const resp = await fetch(url +"/api/profile/" + id, {
+    const resp = await fetch(url +"/api/profile" , {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json" , "Authorization": "Bearer " + localStorage.getItem('token')
+       },
     });
 
     if (!resp.ok) throw new Error("Error fetching profile");
@@ -90,16 +91,16 @@ userServices.updateProfile = async (formData) => {
 
 
 
-userServices.deleteAccount = async (id) => {
+userServices.deleteAccount = async () => {
   try {
     
-    const res = await fetch(url + "/api/user/" + id, {
+    const res = await fetch(url + "/api/user" , {
       method: "DELETE",
-      headers: { Authorization: "Bearer" + localStorage.getItem("token") },
+      headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
     });
 
     if (!res.ok) throw new Error("Error delete account");
-    return await res.json();
+    return true
   } catch (error) {
     console.error(error);
   }
@@ -154,3 +155,22 @@ userServices.deleteAccount = async (id) => {
 
 
 export default userServices
+ 
+// MovieVerse reviews services
+userServices.createMovieVerseReview = async (formData) => {
+  try {
+    const resp = await fetch(url + "/api/movieverse", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify(formData),
+    });
+    if (!resp.ok) throw new Error("Error creating MovieVerse review");
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

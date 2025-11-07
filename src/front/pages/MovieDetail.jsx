@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import "./MovieDetail.css";
+import { Favorites } from "../components/Favorites";
 
 export const MovieDetail = () => {
   const { id } = useParams();
@@ -14,7 +15,9 @@ export const MovieDetail = () => {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", body: "", valoration: 0 });
   const [favoriteAdded, setFavoriteAdded] = useState(false);
-
+  const [providers, setProviders] = useState([]); // plataformas
+  const [watched, setWatched] = useState(false);
+  const [watchedId, setWatchedId] = useState(null);
   // 🔹 Revisar si ya esta marcada como favorita
   useEffect(() => {
     const saved = localStorage.getItem(`favorite-${id}`);
@@ -26,8 +29,7 @@ export const MovieDetail = () => {
     const loadMovie = async () => {
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${
-            import.meta.env.VITE_TMDB_API_KEY
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_API_KEY
           }&language=es-ES`
         );
         const data = await res.json();
@@ -52,11 +54,11 @@ export const MovieDetail = () => {
 
         const safeReviews = Array.isArray(data.reviews)
           ? data.reviews.map((r) => ({
-              ...r,
-              valoration: parseInt(r.valoration) || 0,
-              title: r.title || "Sin título",
-              body: r.body || "Sin contenido",
-            }))
+            ...r,
+            valoration: parseInt(r.valoration) || 0,
+            title: r.title || "Sin título",
+            body: r.body || "Sin contenido",
+          }))
           : [];
 
         setReviews(safeReviews);
@@ -67,6 +69,31 @@ export const MovieDetail = () => {
     };
     loadReviews();
   }, [id]);
+
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/watch/providers?api_key=${import.meta.env.VITE_TMDB_API_KEY
+          }`
+        );
+        const data = await res.json();
+
+        // El país ES se usa para España (puedes cambiar a "US" o el tuyo)
+        const es = data.results?.ES;
+        if (es && es.flatrate) {
+          setProviders(es.flatrate);
+        } else {
+          setProviders([]);
+        }
+      } catch (err) {
+        console.error("Error al cargar plataformas:", err);
+      }
+    };
+
+    loadProviders();
+  }, [id]);
+
 
   // 🔹 Enviar reseña
   const handleSubmit = async (e) => {
@@ -123,44 +150,87 @@ export const MovieDetail = () => {
     }
   };
 
-  // 🔹 Agregar a favoritos
-  const handleAddFavorite = async () => {
-    if (!token) {
-      alert("Debes iniciar sesión para agregar a favoritos.");
-      return;
-    }
+
+  const handleWatched = async (tmdb_id) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/favorites`,
-        {
+      if (!watched) {
+        // 👉 AÑADIR película vista
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/moviesviews/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ tmdb_id: id }),
+          body: JSON.stringify({ tmdb_id }),
+        });
+        const data = await res.json();
+
+        // 🔹 Adaptación: tu backend devuelve "movies views"
+        const movieData = data["movies views"];
+
+        if (res.ok && data.success && movieData) {
+          setWatched(true);
+          setWatchedId(movieData.id); // guarda el id autoincremental
+        } else {
+          console.warn("⚠️ Error al marcar como vista:", data.message || data.error);
         }
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setFavoriteAdded(true);
-        localStorage.setItem(`favorite-${id}`, "true");
-        alert("❤️ Película agregada a favoritos (guardada en el servidor).");
       } else {
-        setFavoriteAdded(true);
-        localStorage.setItem(`favorite-${id}`, "true");
-        alert("💖 Guardado localmente (backend no disponible).");
+        // 👉 ELIMINAR película vista por id autoincremental
+        if (!watchedId) {
+          return;
+        }
+
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/moviesviews/${watchedId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          setWatched(false);
+          setWatchedId(null);
+        } else {
+          console.warn("⚠️ Error al desmarcar:", data.message || data.error);
+        }
       }
-    } catch (error) {
-      console.error("Error al agregar favorito:", error);
-      setFavoriteAdded(true);
-      localStorage.setItem(`favorite-${id}`, "true");
-      alert("💖 Guardado localmente (error de conexión).");
+    } catch (err) {
+      console.error("💥 Error en handleWatched:", err);
     }
   };
+
+
+  // 🔹 Verificar si esta película ya está en favoritos o vista
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const loadStatus = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/movie/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          setFavoriteAdded(!!data.favorite);
+          setWatched(!!data.watched);
+          if (data.watched && data.watched.id) {
+            setWatchedId(data.watched.id);
+          } else {
+            setWatchedId(null);
+          }
+        }
+      } catch (err) {
+        console.error("💥 Error al cargar estado de película:", err);
+      }
+    };
+
+    loadStatus();
+  }, [id]);
+
 
   if (!movie) {
     return (
@@ -175,8 +245,6 @@ export const MovieDetail = () => {
       className="movie-detail-container"
       style={{
         backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
       }}
     >
       <div className="movie-detail-overlay">
@@ -192,33 +260,53 @@ export const MovieDetail = () => {
             <p className="movie-detail-overview">{movie.overview}</p>
             <p><strong>Año:</strong> {movie.release_date?.split("-")[0]}</p>
             <p><strong>Géneros:</strong> {movie.genres?.map((g) => g.name).join(", ")}</p>
+            <h3>Plataformas disponibles:</h3>
+            <div className="providers" >
+              {providers.length > 0 ? (
+                providers.map((p) => (
+                  <a
+                    key={p.provider_id}
+                    href={`https://www.themoviedb.org/movie/${id}-watch`} // Enlace TMDb que redirige a la plataforma real
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="provider"
+                    title={`Ver en ${p.provider_name}`}
+                  >
+                    <img
+                      src={`https://image.tmdb.org/t/p/w92${p.logo_path}`}
+                      alt={p.provider_name}
+                    />
+                  </a>
+                ))
+              ) : (
+                <p>No disponible en plataformas conocidas.</p>
+              )}
+            </div>
 
-          {isLogged ? (
-  <div className="actions">
-    <button
-      className="btn-red"
-      onClick={() => setShowForm(!showForm)}
-    >
-      {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
-    </button>
+            {isLogged ? (
+              <div className="actions">
+                <button
+                  className="btn-red"
+                  onClick={() => setShowForm(!showForm)}
+                >
+                  {showForm ? "❌ Cancelar reseña" : "✍️ Añadir reseña"}
+                </button>
 
-    <button
-      className={`btn-fav ${favoriteAdded ? "active" : ""}`}
-      onClick={handleAddFavorite}
-    >
-      {favoriteAdded ? "💖 favoritos" : "❤️ Añadir a favoritos"}
-    </button>
-  </div>
-) : (
-  <p className="login-warning">
-    🔒 Registrate o inicia sesión para dejar una reseña o agregar favoritos.
-  </p>
-)}
+                <Favorites tmdbId={id} title={movie.title} mode="button" />
+                <button
+                  className="btn-red"
+                  onClick={() => handleWatched(id)}
+                >
+                  {watched ? "❌ Desmarcar como vista" : "👁️ Marcar como vista"}
+                </button>
 
+              </div>
+            ) : (
+              <p className="login-warning">
+                🔒 Registrate o inicia sesión para dejar una reseña o agregar favoritos.
+              </p>
+            )}
 
-            <button className="btn-back" onClick={() => window.history.back()}>
-              ← Volver
-            </button>
 
             <div className="movie-reviews">
               <h3>Reseñas</h3>

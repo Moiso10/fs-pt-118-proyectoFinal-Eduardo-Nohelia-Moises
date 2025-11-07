@@ -1,0 +1,9 @@
+/* Estilos del componente Cloudinary */
+
+.cloudinary-wrapper {
+  padding: 30px;
+}
+
+.cloudinary-error {
+  color: red;
+}

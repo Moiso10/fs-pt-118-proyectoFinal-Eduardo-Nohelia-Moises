@@ -1,0 +1,67 @@
+/* Footer 3D theme aligned with dark palette */
+.footer-3d {
+  /* Fondo metalizado simétrico: negro → highlight blanco central → negro */
+  background-image:
+    linear-gradient(90deg,
+      #000000 0%,
+      #1a1a1a 12%,
+      #3f3f3f 24%,
+      #7b7b7b 36%,
+      #fefefe 50%, /* highlight central */
+      #7b7b7b 64%,
+      #3f3f3f 76%,
+      #1a1a1a 88%,
+      #000000 100%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 0.5px,
+      rgba(0,0,0,0.06) 1px,
+      rgba(0,0,0,0.06) 1.5px
+    );
+  background-blend-mode: overlay;
+  border-top: 1px solid #2b3035;
+  color: #adb5bd;
+  position: relative;
+  box-shadow:
+    0 -8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.footer-3d::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -1px;
+  height: 2px;
+  /* Línea superior con degradado metalizado (blanco → negro) */
+  /* Simétrico: bordes oscuros y highlight intenso en el centro */
+  background-image: linear-gradient(90deg,
+    rgba(0,0,0,0.35) 0%,
+    rgba(26,26,26,0.35) 12%,
+    rgba(63,63,63,0.35) 24%,
+    rgba(255,255,255,0.88) 48%,
+    rgba(255,255,255,1.00) 50%, /* pico de brillo aumentado */
+    rgba(255,255,255,0.88) 52%,
+    rgba(63,63,63,0.35) 76%,
+    rgba(26,26,26,0.35) 88%,
+    rgba(0,0,0,0.35) 100%
+  );
+  filter: blur(0.5px);
+  box-shadow: 0 0 8px rgba(255,255,255,0.22);
+}
+
+.footer-3d p {
+  margin: 0.25rem 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+.footer-3d p:first-child {
+  color: #e6edf3;
+}
+
+@media (max-width: 768px) {
+  .footer-3d {
+    padding: 1rem 0.75rem !important;
+  }
+}

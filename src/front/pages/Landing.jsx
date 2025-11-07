@@ -2,24 +2,29 @@ import { Link } from "react-router-dom";
 import "./Landing.css";
 import { useEffect, useState } from "react";
 import { Carrousel } from "../components/Carrousel/Carrousel";
+import Reviews from "../components/Reviews/Reviews";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const Landing = () => {
   const [bgImage, setBgImage] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const { store } = useGlobalReducer();
+
+  const loadReviews = async () => {
+    try {
+      const base = import.meta.env.VITE_BACKEND_URL;
+      const resp = await fetch(base + "/api/movieverse");
+      const data = await resp.json();
+      if (resp.ok && Array.isArray(data.reviews_movie_verse)) {
+        setReviews(data.reviews_movie_verse);
+      }
+    } catch (err) {
+      console.error("Error cargando reseñas MovieVerse:", err);
+    }
+  };
 
   useEffect(() => {
-    const loadReviews = async () => {
-      try {
-        const base = import.meta.env.VITE_BACKEND_URL;
-        const resp = await fetch(base + "/api/movieverse");
-        const data = await resp.json();
-        if (resp.ok && Array.isArray(data.reviews_movie_verse)) {
-          setReviews(data.reviews_movie_verse);
-        }
-      } catch (err) {
-        console.error("Error cargando reseñas MovieVerse:", err);
-      }
-    };
     loadReviews();
   }, []);
 
@@ -45,14 +50,14 @@ export const Landing = () => {
                 </p>
                 <div className="d-flex gap-2 justify-content-center">
                   <Link to="/peliculas" className="btn btn-primary btn-lg">Ver Películas</Link>
-                  <Link to="/registro" className="btn btn-outline-primary btn-lg">Registrarse</Link>
+                  <Link to="/registro" className="btn btn-primary btn-lg">Registrarse</Link>
                 </div>
               </div>
               <div className="col-md-5 text-center mt-4 mt-md-0">
                 <div className="login-card p-4 border rounded bg-white shadow-sm">
                   <h5 className="mb-2">¿Ya tienes cuenta?</h5>
                   <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
-                  <Link to="/profile" className="btn btn-primary">Ver Perfil (demo)</Link>
+                  
                 </div>
               </div>
             </div>
@@ -90,51 +95,26 @@ export const Landing = () => {
             <div className="row mt-4">
               <div className="col-12 text-center mb-3">
                 <h4 className="mb-0">Reseñas de MovieVerse</h4>
-                <p className="text-muted">Opiniones reales de nuestra comunidad</p>
+                <button
+                  className="btn btn-outline-primary mt-2"
+                  onClick={() => setShowReviewModal(true)}
+                >
+                  Dejar reseña
+                </button>
               </div>
-
-              {reviews.length === 0 ? (
-                <div className="col-12 text-center">
-                  <p className="text-muted">Aún no hay reseñas disponibles.</p>
-                </div>
-              ) : (
-                reviews.map((rev) => {
-                  const alias = (rev?.user?.email || "Usuario").split("@")[0];
-                  const stars = Math.max(0, Math.min(5, parseInt(rev?.valoration ?? 0)));
-                  return (
-                    <div key={rev.id} className="col-12 col-md-6 col-lg-4 mb-4">
-                      <div className="card bg-dark text-light border-secondary h-100">
-                        <div className="card-body d-flex flex-column">
-                          <div className="d-flex justify-content-between align-items-center mb-2">
-                            <span className="badge bg-secondary">@{alias}</span>
-                            <div aria-label={`Valoración ${stars} de 5`}>
-                              {[...Array(5)].map((_, i) => (
-                                <i
-                                  key={i}
-                                  className={(i < stars) ? "fa-solid fa-star text-warning" : "fa-regular fa-star text-secondary"}
-                                  title={(i < stars) ? "Estrella" : "Sin estrella"}
-                                ></i>
-                              ))}
-                            </div>
-                          </div>
-                          <h6 className="card-title mb-2">{rev.title}</h6>
-                          <textarea
-                            className="form-control bg-dark text-light border-secondary flex-grow-1"
-                            value={rev.body}
-                            readOnly
-                            rows={4}
-                            style={{ resize: "none", overflowY: "auto" }}
-                            aria-label="Comentario del usuario"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              )}
             </div>
           </div>
         </section>
+        <Reviews
+          open={showReviewModal}
+          onClose={() => setShowReviewModal(false)}
+          onSubmitted={() => {
+            setShowReviewModal(false);
+            loadReviews();
+          }}
+          auth={store?.auth}
+          currentUser={store?.user}
+        />
       </div>
     </div>
   );

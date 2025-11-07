@@ -1,9 +1,7 @@
 /* Estilos Landingpage (Dark por defecto) */
 
 .landing {
-  background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
-  color: #e9ecef;
-  position: relative;
+    position: relative;
 }
 
 .landing-bg {
@@ -27,8 +25,7 @@
     radial-gradient(900px 450px at 15% 20%, rgba(102, 178, 255, 0.18) 0%, transparent 60%),
     radial-gradient(900px 450px at 85% 0%, rgba(187, 134, 252, 0.14) 0%, transparent 60%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
-  color: #e6edf3;
-  border-top: 1px solid #1f2329;
+    border-top: 1px solid #1f2329;
   border-bottom: 1px solid #1f2329;
 }
 

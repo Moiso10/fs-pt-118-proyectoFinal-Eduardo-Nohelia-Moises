@@ -1,0 +1,21 @@
+/* Tema base global (oscuro) */
+
+:root {
+  --bg-start: #0f1115;
+  --bg-end: #171a21;
+  --text-main: #e9ecef;
+}
+
+html, body, #app, #root {
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  color: var(--text-main);
+}
+
+/* Fondo radial oscuro usado en Favorites y aplicado globalmente */
+.favorites-bg {
+  background: radial-gradient(circle, #0d1117 0%, #010409 100%);
+}

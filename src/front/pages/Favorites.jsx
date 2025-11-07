@@ -1,25 +1,59 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Favorites.css";
+import { Loading } from "../components/Loading"; //spinner importado
+
 
 export const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // spinner nuevo estado de carga
+  const navigate = useNavigate();
 
+  async function fetchMovieDetails(tmdb_id) {
+    try {
+      const res = await fetch(`https://api.themoviedb.org/3/movie/${tmdb_id}`, {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("💥 Error al cargar película TMDB:", err);
+      return null;
+    }
+  }
+
+  // 🔹 Cargar lista de favoritos del usuario
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     async function loadFavorites() {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/favorites`, {
+        setIsLoading(true); // Activa el spinner
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/favorites/user`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
+
         if (data.success) {
-          setFavorites(data.favorites || []);
+          const movies = await Promise.all(
+            data.favorites.map(async (fav) => {
+              const movie = await fetchMovieDetails(fav.tmdb_id);
+              return movie
+                ? { ...movie, id: fav.id, tmdb_id: fav.tmdb_id }
+                : fav;
+            })
+          );
+          setFavorites(movies);
         } else {
           console.warn("⚠️ No se pudieron cargar los favoritos del backend");
+          setFavorites([]);
         }
       } catch (err) {
         console.error("💥 Error al cargar favoritos:", err);
+      } finally {
+        setIsLoading(false); //  Apaga el spinner
       }
     }
 
@@ -34,13 +68,21 @@ export const Favorites = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
-        setFavorites(favorites.filter((f) => f.id !== favId));
+        setFavorites((prevFavorites) => prevFavorites.filter((f) => f.id !== favId));
       }
     } catch (err) {
       console.error("💥 Error al eliminar favorito:", err);
     }
   };
 
+  // Muestra el spinner mientras carga
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <Loading message="Cargando tus favoritos..." />
+      </div>
+    );
+  }
   return (
     <div className="favorites-container">
       <h1>💖 Mis Favoritos</h1>
@@ -49,7 +91,11 @@ export const Favorites = () => {
       ) : (
         <div className="favorites-grid">
           {favorites.map((fav) => (
-            <div key={fav.id} className="favorite-card">
+            <div
+              key={fav.id}
+              className="favorite-card clickable"
+              onClick={() => navigate(`/movie/${fav.tmdb_id}`)}
+            >
               <img
                 src={
                   fav.poster_path
@@ -59,7 +105,15 @@ export const Favorites = () => {
                 alt={fav.title}
               />
               <h4>{fav.title || "Sin título"}</h4>
-              <button className="btn-remove" onClick={() => handleRemove(fav.id)}>
+
+              {/* ❌ Botón para eliminar (sin activar el click general) */}
+              <button
+                className="btn-remove"
+                onClick={(e) => {
+                  e.stopPropagation(); // 🧠 evita que el click del contenedor navegue
+                  handleRemove(fav.id);
+                }}
+              >
                 ❌ Quitar
               </button>
             </div>
