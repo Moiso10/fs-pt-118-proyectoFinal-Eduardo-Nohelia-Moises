@@ -11,6 +11,8 @@ from .api.routes import api
 from .api.admin import setup_admin
 from .api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail, Message
+from .api.mail.config import mail
 from flask_cors import CORS
 
 # from models import Person
@@ -28,6 +30,15 @@ jwt = JWTManager(app)
 cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME')
 api_key = os.getenv('CLOUDINARY_API_KEY')
 api_secret = os.getenv('CLOUDINARY_API_SECRET')
+
+app.config['MAIL_SERVER']= 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.getenv("EMAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("EMAIL_PASSWORD")
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_DEFAULT_SENDER'] = ('MovieVerse', 'movieverse@gmail.com')
+
+mail.init_app(app)  # Inicializa mail con la aplicación
 
 
 
