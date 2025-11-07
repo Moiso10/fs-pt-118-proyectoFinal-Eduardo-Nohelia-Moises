@@ -94,6 +94,12 @@
   font-weight: 500;
 }
 
+/* Mensaje cuando no hay imágenes */
+.carrousel-empty {
+  color: #fff;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .carrousel-slide.is-prev {
     transform: translateX(-12%) rotateY(22deg) rotateZ(1.5deg) translateZ(-120px) scale(0.92);

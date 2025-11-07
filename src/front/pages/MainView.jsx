@@ -181,8 +181,6 @@ export const MainView = () => { //crea y exporta el componente MainView
                   backgroundImage: movie.poster_path
                     ? `url(https://image.tmdb.org/t/p/w500${movie.poster_path})`
                     : "url(https://via.placeholder.com/500x750?text=Sin+imagen)",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                 }}
               ></div>
 

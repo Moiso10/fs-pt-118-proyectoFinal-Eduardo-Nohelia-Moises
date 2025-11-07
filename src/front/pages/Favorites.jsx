@@ -93,9 +93,8 @@ export const Favorites = () => {
           {favorites.map((fav) => (
             <div
               key={fav.id}
-              className="favorite-card"
+              className="favorite-card clickable"
               onClick={() => navigate(`/movie/${fav.tmdb_id}`)}
-              style={{ cursor: "pointer", position: "relative" }}
             >
               <img
                 src={

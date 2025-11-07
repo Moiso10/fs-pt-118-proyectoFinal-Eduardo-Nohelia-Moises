@@ -119,7 +119,7 @@ export const Carrousel = ({ onSlideChange }) => {
         })}
         {images.length === 0 && (
           <div className="carrousel-slide is-active" aria-hidden={false}>
-            <div style={{ color: "#fff", textAlign: "center" }}>
+            <div className="carrousel-empty">
               No se encontraron imágenes en `src/front/assets/carrousel/`.
             </div>
           </div>
