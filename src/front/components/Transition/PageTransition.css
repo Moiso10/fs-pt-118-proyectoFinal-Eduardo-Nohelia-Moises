@@ -1,0 +1,32 @@
+/* Full-screen overlay fade */
+.nv-transition {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  animation: nv-fade-out 650ms ease forwards;
+  z-index: 9999; /* above navbar */
+}
+
+.nv-transition-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 450px at 15% 20%, rgba(102, 178, 255, 0.15) 0%, transparent 60%),
+    radial-gradient(900px 450px at 85% 0%, rgba(187, 134, 252, 0.12) 0%, transparent 60%);
+  filter: blur(20px) opacity(0.6);
+}
+
+@keyframes nv-fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* Container content subtle enter */
+.page-container.is-entering {
+  animation: nv-content-in 520ms ease both;
+}
+
+@keyframes nv-content-in {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
