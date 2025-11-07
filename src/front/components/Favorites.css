@@ -1,0 +1,54 @@
+.btn-fav {
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-fav.active {
+  background: #e91e63;
+  transform: scale(1.05);
+}
+
+.btn-fav.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.favorites-container {
+  padding: 2rem;
+  color: white;
+  text-align: center;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.favorite-card {
+  background: rgba(30, 30, 30, 0.9);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+  position: relative; /* necesario para posicionar el botón quitar */
+}
+
+.favorite-card:hover {
+  transform: scale(1.02);
+}
+
+.favorite-card.clickable {
+  cursor: pointer;
+}
+
+.favorite-card img {
+  width: 100%;
+  border-radius: 8px;
+}

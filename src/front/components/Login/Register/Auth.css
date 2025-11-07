@@ -1,0 +1,130 @@
+/* Auth (Login/Register) - Dark theme aligned with Landing */
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(180deg, #0f1115 0%, #171a21 100%);
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 420px;
+  background-color: #1e2125; /* same as .login-card */
+  border: 1px solid #2b3035;
+  color: #e9ecef;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.title-form {
+  margin: 0 0 1rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #f5f7fa; /* matches landing title */
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  background-color: #0f1115;
+  border: 1px solid #2b3035;
+  color: #e9ecef;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  margin-bottom: 1rem;
+}
+
+.auth-form input::placeholder {
+  color: #adb5bd;
+}
+
+.auth-form input:focus {
+  border-color: #66b2ff;
+  box-shadow: 0 0 0 3px rgba(102, 178, 255, 0.22);
+  background-color: #12151a;
+  animation: typing-glow 1.4s ease-in-out infinite alternate;
+}
+
+.auth-form button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  background-image: linear-gradient(90deg, #66b2ff 0%, #bb86fc 100%);
+  background-size: 200% 100%;
+  box-shadow: 0 8px 20px rgba(102, 178, 255, 0.25);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+.auth-form button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(102, 178, 255, 0.32);
+  filter: brightness(1.05);
+  animation: gradient-shift .8s ease-in-out forwards;
+}
+
+.auth-form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Subtle divider spacing for form controls */
+.auth-form input + input {
+  margin-top: 0.25rem;
+}
+
+/* Switch link below form */
+.auth-switch {
+  margin-top: 0.75rem;
+  text-align: center;
+  color: #adb5bd;
+}
+
+.auth-link {
+  color: #66b2ff;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+  filter: brightness(1.1);
+}
+
+/* Keyframes for subtle micro-animations */
+@keyframes typing-glow {
+  from {
+    box-shadow: 0 0 0 3px rgba(102, 178, 255, 0.18);
+  }
+  to {
+    box-shadow: 0 0 0 4px rgba(187, 134, 252, 0.22);
+  }
+}
+
+@keyframes gradient-shift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 1.25rem;
+    border-radius: 10px;
+  }
+  .title-form {
+    font-size: 1.5rem;
+  }
+}

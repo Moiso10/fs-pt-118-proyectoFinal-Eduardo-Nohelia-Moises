@@ -1,0 +1,34 @@
+/* Footer 3D theme aligned with dark palette */
+.footer-3d {
+  background-color: #1e2125;
+  border-top: 1px solid #2b3035;
+  color: #adb5bd;
+  position: relative;
+  box-shadow:
+    0 -8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.footer-3d::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -1px;
+  height: 2px;
+  background-image: linear-gradient(90deg, rgba(102,178,255,0.35), rgba(187,134,252,0.35));
+  filter: blur(0.5px);
+}
+
+.footer-3d p {
+  margin: 0.25rem 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+.footer-3d p:first-child {
+  color: #e6edf3;
+}
+
+@media (max-width: 768px) {
+  .footer-3d {
+    padding: 1rem 0.75rem !important;
+  }
+}

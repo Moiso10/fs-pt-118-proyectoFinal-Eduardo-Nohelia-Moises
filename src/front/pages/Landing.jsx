@@ -1,10 +1,32 @@
 import { Link } from "react-router-dom";
 import "./Landing.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Carrousel } from "../components/Carrousel/Carrousel";
+import Reviews from "../components/Reviews/Reviews";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const Landing = () => {
   const [bgImage, setBgImage] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const { store } = useGlobalReducer();
+
+  const loadReviews = async () => {
+    try {
+      const base = import.meta.env.VITE_BACKEND_URL;
+      const resp = await fetch(base + "/api/movieverse");
+      const data = await resp.json();
+      if (resp.ok && Array.isArray(data.reviews_movie_verse)) {
+        setReviews(data.reviews_movie_verse);
+      }
+    } catch (err) {
+      console.error("Error cargando reseñas MovieVerse:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadReviews();
+  }, []);
 
   return (
     <div className="landing">
@@ -18,27 +40,24 @@ export const Landing = () => {
       )}
 
       <div className="landing-content">
-        <section className="landing-hero bg-light py-5">
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col-md-7">
+        <section className="landing-hero py-5">
+          <div className="container text-center">
+            <div className="row justify-content-center align-items-center">
+              <div className="col-md-8 col-lg-7">
                 <h1 className="display-4 mb-3">Bienvenido a MovieVerse</h1>
-                <p className="lead text-muted mb-4">
+                <p className="lead mb-4">
                   Descubre, guarda y disfruta de tus películas favoritas.
                 </p>
-                <div className="d-flex gap-2">
+                <div className="d-flex gap-2 justify-content-center">
                   <Link to="/peliculas" className="btn btn-primary btn-lg">Ver Películas</Link>
                   <Link to="/registro" className="btn btn-outline-primary btn-lg">Registrarse</Link>
-                  <button type="button" className="btn btn-link ms-2" onClick={() => document.documentElement.classList.toggle('theme-dark')}>
-                    Cambiar tema
-                  </button>
                 </div>
               </div>
               <div className="col-md-5 text-center mt-4 mt-md-0">
                 <div className="login-card p-4 border rounded bg-white shadow-sm">
                   <h5 className="mb-2">¿Ya tienes cuenta?</h5>
                   <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
-                  <Link to="/profile" className="btn btn-primary">Ver Perfil (demo)</Link>
+                  
                 </div>
               </div>
             </div>
@@ -71,8 +90,31 @@ export const Landing = () => {
                 <p className="text-muted">Regístrate y gestiona tu perfil de forma sencilla.</p>
               </div>
             </div>
+
+            {/* Reseñas de MovieVerse */}
+            <div className="row mt-4">
+              <div className="col-12 text-center mb-3">
+                <h4 className="mb-0">Reseñas de MovieVerse</h4>
+                <button
+                  className="btn btn-outline-primary mt-2"
+                  onClick={() => setShowReviewModal(true)}
+                >
+                  Dejar reseña
+                </button>
+              </div>
+            </div>
           </div>
         </section>
+        <Reviews
+          open={showReviewModal}
+          onClose={() => setShowReviewModal(false)}
+          onSubmitted={() => {
+            setShowReviewModal(false);
+            loadReviews();
+          }}
+          auth={store?.auth}
+          currentUser={store?.user}
+        />
       </div>
     </div>
   );

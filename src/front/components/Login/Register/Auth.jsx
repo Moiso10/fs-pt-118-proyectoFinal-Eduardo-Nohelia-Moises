@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import "./Auth.css"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import userServices from "../../../services/userServices"
 
 
@@ -38,8 +38,10 @@ const Auth = ({mode}) =>{
 
                 if(data?.success){
                     localStorage.setItem("token",data.token);
-                    dispatch({ type: "user_logged_in"})
+                    localStorage.setItem("profile", JSON.stringify(data.data.profile))
+                    dispatch({ type: "set_user", payload: data.data.profile})
                     navigate("/")
+                    console.log(data)
                 }
             }else {
 
@@ -57,7 +59,7 @@ const Auth = ({mode}) =>{
             
         }
     }
-
+  
 
 
     return(
@@ -83,6 +85,19 @@ const Auth = ({mode}) =>{
 
                  <button type="submit">{ login ? "Login" : "Register"}</button>
 
+                 <div className="auth-switch">
+                   {login ? (
+                     <span>
+                       ¿No tienes cuenta? {" "}
+                       <Link to="/register" className="auth-link">Regístrate</Link>
+                     </span>
+                   ) : (
+                     <span>
+                       ¿Ya tienes cuenta? {" "}
+                       <Link to="/login" className="auth-link">Inicia sesión</Link>
+                     </span>
+                   )}
+                 </div>
 
 
 
