@@ -102,6 +102,27 @@ export const Landing = () => {
                   Dejar reseña
                 </button>
               </div>
+              {/* Lista de reseñas */}
+              {Array.isArray(reviews) && reviews.length > 0 ? (
+                reviews.map((r) => (
+                  <div key={r.id} className="col-md-4 col-sm-6 mb-3">
+                    <div className="card bg-dark text-white h-100 shadow-sm">
+                      <div className="card-body">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                          <strong className="me-2">{r.title || "Sin título"}</strong>
+                          <span className="text-warning">{"\u2B50".repeat(r.valoration || 0)}</span>
+                        </div>
+                        <p className="mb-2">{r.body}</p>
+                        <small className="text-muted">👤 {r.user?.email ? r.user.email.split("@")[0] : "Usuario"}</small>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-12 text-center">
+                  <p className="text-muted">No hay reseñas todavía.</p>
+                </div>
+              )}
             </div>
           </div>
         </section>
