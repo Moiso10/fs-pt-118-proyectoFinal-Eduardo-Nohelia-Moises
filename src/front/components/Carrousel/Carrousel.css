@@ -6,6 +6,81 @@
   margin: 0 auto;
   background: #000;
   position: relative;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Fila que contiene el carrusel y los botones laterales */
+.carrousel-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(16px, 3vw, 48px); /* separa del hero */
+}
+
+.carrousel-nav {
+  height: 60px;
+  min-width: 60px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  line-height: 1;
+  border-radius: 12px;
+  color: #ffffff;
+  background-image:
+    linear-gradient(#0b0b0b, #0b0b0b),
+    linear-gradient(90deg, rgba(102,178,255,0.65), rgba(187,134,252,0.65));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.carrousel-nav:hover,
+.carrousel-nav:focus {
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.45),
+    0 0 0 2px rgba(102,178,255,0.25);
+}
+
+.carrousel-nav:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.carrousel-nav-left {
+  justify-self: start;
+}
+
+.carrousel-nav-right {
+  justify-self: end;
+}
+
+/* Líneas de brillo superior e inferior para reforzar el tema 3D */
+.carrousel::before,
+.carrousel::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+.carrousel::before { /* línea superior */
+  top: -1px;
+  background-image: linear-gradient(90deg, rgba(102,178,255,0.35), rgba(187,134,252,0.35));
+}
+
+.carrousel::after { /* línea inferior */
+  bottom: -1px;
+  background-image: linear-gradient(90deg, rgba(187,134,252,0.35), rgba(102,178,255,0.35));
 }
 
 .carrousel-bg {
@@ -51,6 +126,27 @@
   transform: translateZ(0) rotateY(0deg) scale(1.02);
   z-index: 3;
   opacity: 1;
+  cursor: pointer; /* indica que la slide activa es clicable */
+}
+
+/* Bloque de títulos bajo el carrusel */
+.carrousel-titles {
+  text-align: center;
+  margin-top: 10px;
+  color: var(--text-main, #ffffff);
+}
+
+.carrousel-title-es {
+  font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.carrousel-title-en {
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  margin-top: 2px;
 }
 
 .carrousel-slide.is-prev {
@@ -92,6 +188,12 @@
 .carrousel-indicator {
   color: #fff;
   font-weight: 500;
+}
+
+/* Mensaje cuando no hay imágenes */
+.carrousel-empty {
+  color: #fff;
+  text-align: center;
 }
 
 @media (max-width: 768px) {

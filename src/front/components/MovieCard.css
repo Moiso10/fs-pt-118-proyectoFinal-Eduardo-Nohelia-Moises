@@ -1,0 +1,6 @@
+/* Estilos de MovieCard para fondo del poster */
+
+.movie-card .poster {
+  background-size: cover;
+  background-position: center;
+}

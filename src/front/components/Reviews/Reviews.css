@@ -1,0 +1,13 @@
+/* Backdrop y estados de cursor para Reviews */
+
+.reviews-backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.star-auth {
+  cursor: pointer;
+}
+
+.star-disabled {
+  cursor: not-allowed;
+}

@@ -18,7 +18,7 @@ export const Navbar = () => {
 
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg nav-3d">
             <div className="container">
                 <Link to="/" className="navbar-brand mb-0">
                     <img src={movieVerseLogo} alt="MovieVerse" />
@@ -58,7 +58,7 @@ export const Navbar = () => {
                                     <Link to="/watched" className="nav-link">Películas vistas</Link>
                                 </li>
                                 <button
-                                    className="btn btn-danger"
+                                    className="btn btn-danger btn-3d"
                                     onClick={handleLogout}
                                 >
                                     Cerrar sesión

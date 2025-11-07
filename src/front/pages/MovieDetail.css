@@ -5,6 +5,8 @@
   color: white;
   position: relative;
   background-color: #000;
+  background-size: cover;
+  background-position: center;
 }
 /* Capa semitransparente encima del fondo */
 .movie-detail-overlay {

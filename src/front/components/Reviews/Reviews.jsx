@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Reviews.css";
 import userServices from "../../services/userServices";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 
@@ -64,10 +65,9 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
 
   return (
     <div
-      className="modal d-block"
+      className="modal d-block reviews-backdrop"
       role="dialog"
       aria-modal="true"
-      style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
@@ -90,12 +90,11 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
                   <i
                     key={i}
                     className={
-                      i <= rating ? "fa-solid fa-star text-warning fs-4 me-1" : "fa-regular fa-star text-secondary fs-4 me-1"
+                      `${i <= rating ? "fa-solid fa-star text-warning fs-4 me-1" : "fa-regular fa-star text-secondary fs-4 me-1"} ${auth ? "star-auth" : "star-disabled"}`
                     }
                     role="button"
                     aria-label={`Establecer ${i} estrellas`}
                     onClick={() => handleStarClick(i)}
-                    style={{ cursor: auth ? "pointer" : "not-allowed" }}
                   ></i>
                 ))}
               </div>

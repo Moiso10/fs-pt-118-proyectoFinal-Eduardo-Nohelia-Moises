@@ -121,10 +121,6 @@ export const Favorites = ({ tmdbId, title, mode = "list" }) => {
         className={`btn-fav ${isFavorite ? "active" : ""} ${loading ? "loading" : ""}`}
         onClick={handleToggleFavorite}
         disabled={loading}
-        style={{
-          opacity: loading ? 0.6 : 1,
-          transition: "opacity 0.3s ease",
-        }}
       >
         {isFavorite ? "💖 Quitar favoritos" : "❤️ Agregar a favoritos"}
       </button>

@@ -1,6 +1,5 @@
 /* CONTENEDOR GENERAL */
 .mainview-container {
-  background: radial-gradient(circle, #0d1117 0%, #010409 100%);
   color: white;
   min-height: 100vh;
   padding: 2rem;
@@ -121,6 +120,8 @@
   height: 230px;
   border-radius: 4px;
   margin-bottom: 1rem;
+  background-size: cover;
+  background-position: center;
 }
 
 /* BOTONES DETALLES, FAVORITOS */
