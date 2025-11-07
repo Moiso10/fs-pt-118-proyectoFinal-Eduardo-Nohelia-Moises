@@ -245,8 +245,6 @@ export const MovieDetail = () => {
       className="movie-detail-container"
       style={{
         backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
       }}
     >
       <div className="movie-detail-overlay">

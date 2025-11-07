@@ -1,5 +1,6 @@
 // src/front/components/MovieCard.jsx
 import { Link } from "react-router-dom";
+import "./MovieCard.css";
 
 export const MovieCard = ({ movie, isLogged }) => {
   const posterUrl = movie.poster_path
@@ -12,8 +13,6 @@ export const MovieCard = ({ movie, isLogged }) => {
         className="poster"
         style={{
           backgroundImage: `url(${posterUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
         }}
       ></div>
 

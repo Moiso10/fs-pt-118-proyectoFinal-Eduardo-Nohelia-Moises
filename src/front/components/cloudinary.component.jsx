@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./cloudinary.component.css";
 import cloudinaryServices from "../services/cloudinaryServices.jsx";
 
 function CloudinaryComponent({onUploadSuccess}) {
@@ -39,7 +40,7 @@ function CloudinaryComponent({onUploadSuccess}) {
     },[file])
 
     return (
-        <div style={{ padding: 30 }}>
+        <div className="cloudinary-wrapper">
             
             
            
@@ -54,7 +55,7 @@ function CloudinaryComponent({onUploadSuccess}) {
                 />
             
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="cloudinary-error">{error}</p>}
            
         </div>
     );

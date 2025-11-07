@@ -37,10 +37,15 @@
   padding: 10px;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
   transition: transform 0.3s ease;
+  position: relative; /* necesario para posicionar el botón quitar */
 }
 
 .favorite-card:hover {
   transform: scale(1.02);
+}
+
+.favorite-card.clickable {
+  cursor: pointer;
 }
 
 .favorite-card img {
