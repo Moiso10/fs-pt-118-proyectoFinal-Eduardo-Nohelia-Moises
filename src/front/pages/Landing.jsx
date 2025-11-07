@@ -97,10 +97,16 @@ export const Landing = () => {
                 <h4 className="mb-0">Reseñas de MovieVerse</h4>
                 <button
                   className="btn btn-outline-primary mt-2"
-                  onClick={() => setShowReviewModal(true)}
-                >
-                  Dejar reseña
-                </button>
+                 onClick={() => {
+    if (store?.auth) {
+      setShowReviewModal(true);
+    } else {
+      alert("📝 Debes iniciar sesión para dejar una reseña.");
+    }
+  }}
+>
+  Dejar reseña
+</button>
               </div>
               {/* Lista de reseñas */}
               {Array.isArray(reviews) && reviews.length > 0 ? (
@@ -124,6 +130,26 @@ export const Landing = () => {
                 </div>
               )}
             </div>
+           {/* Contenedor de reseñas con scroll */}
+<div className="reviews-wrapper">
+  <div className="reviews-scroll">
+    {reviews.length > 0 ? (
+      reviews.map((r) => (
+        <div key={r.id} className="review-card">
+          <div className="review-header">
+            <strong>@{r.user?.email?.split("@")[0]}</strong>
+            <span className="stars">{"⭐".repeat(r.valoration)}</span>
+          </div>
+          <h6 className="review-title">{r.title}</h6>
+          <p className="review-body">{r.body}</p>
+        </div>
+      ))
+    ) : (
+      <p className="text-center text-muted">Aún no hay reseñas 😶</p>
+    )}
+  </div>
+</div>
+
           </div>
         </section>
         <Reviews
