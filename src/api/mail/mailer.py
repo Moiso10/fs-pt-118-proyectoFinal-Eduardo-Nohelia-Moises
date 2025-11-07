@@ -1,7 +1,8 @@
 from flask_mail import Message
-from .mail.config import mail
+from .config import mail
 from flask import jsonify
 import os
+
 
 def send_email(address, token):
     try:
@@ -9,7 +10,7 @@ def send_email(address, token):
                       recipients=[address])  # Correo del destinatario
 
         # Definir cuerpo del correo, utilizamos la variable de entorno para PROD os.getenv("BACKEND_URL"), en DEV ponemos la del FRONT si estas usando codespace.
-        if  os.getenv("FLASK_DEBUG") == "1":
+        if os.getenv("FLASK_DEBUG") == "1":
             msg.html = f'''<a href="https://glowing-space-succotash-9g76r4xvgggh9xww-3000.app.github.dev/reset?token={token}">Hola, sigue este vinculo para resetear tu contraseña</a>'''
         else:
             msg.html = f'''<a href="{os.getenv("BACKEND_URL")}/reset?token={token}">Hola, sigue este vinculo para resetear tu contraseña</a>'''
