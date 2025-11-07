@@ -50,7 +50,7 @@ export const Landing = () => {
                 </p>
                 <div className="d-flex gap-2 justify-content-center">
                   <Link to="/peliculas" className="btn btn-primary btn-lg">Ver Películas</Link>
-                  <Link to="/registro" className="btn btn-outline-primary btn-lg">Registrarse</Link>
+                  <Link to="/registro" className="btn btn-primary btn-lg">Registrarse</Link>
                 </div>
               </div>
               <div className="col-md-5 text-center mt-4 mt-md-0">

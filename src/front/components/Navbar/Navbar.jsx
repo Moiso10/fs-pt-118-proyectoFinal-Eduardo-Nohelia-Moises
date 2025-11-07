@@ -18,7 +18,7 @@ export const Navbar = () => {
 
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light nav-3d">
+        <nav className="navbar navbar-expand-lg nav-3d">
             <div className="container">
                 <Link to="/" className="navbar-brand mb-0">
                     <img src={movieVerseLogo} alt="MovieVerse" />
