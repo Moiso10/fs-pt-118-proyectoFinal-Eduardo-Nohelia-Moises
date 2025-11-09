@@ -50,16 +50,16 @@ export const Landing = () => {
                 </p>
                 <div className="d-flex gap-2 justify-content-center">
                   <Link to="/peliculas" className="btn btn-primary btn-lg">Ver Películas</Link>
-                  <Link to="/registro" className="btn btn-primary btn-lg">Registrarse</Link>
                 </div>
               </div>
-              <div className="col-md-5 text-center mt-4 mt-md-0">
-                <div className="login-card p-4 border rounded bg-white shadow-sm">
-                  <h5 className="mb-2">¿Ya tienes cuenta?</h5>
-                  <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
-                  
+              {!store?.auth && (
+                <div className="col-md-5 text-center mt-4 mt-md-0">
+                  <div className="login-card p-4 border rounded bg-white shadow-sm">
+                    <h5 className="mb-2">¿Ya tienes cuenta?</h5>
+                    <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </section>

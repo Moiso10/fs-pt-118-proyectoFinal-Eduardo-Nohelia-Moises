@@ -21,7 +21,11 @@ export const Navbar = () => {
         <nav className="navbar navbar-expand-lg nav-3d">
             <div className="container">
                 <Link to="/" className="navbar-brand mb-0">
-                    <img src={movieVerseLogo} alt="MovieVerse" />
+                    <span
+                        className="mv-brand-logo"
+                        aria-label="MovieVerse"
+                        style={{ WebkitMaskImage: `url(${movieVerseLogo})`, maskImage: `url(${movieVerseLogo})` }}
+                    />
                 </Link>
 
                 <button
@@ -39,39 +43,55 @@ export const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <Link to="/" className="nav-link">Inicio</Link>
+                            <Link to="/" className="nav-link">
+                                <span className="nav-word"><span className="nav-initial">I</span>nicio</span>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <Link to="/peliculas" className="nav-link">Películas</Link>
+                            <Link to="/peliculas" className="nav-link">
+                                <span className="nav-word"><span className="nav-initial">P</span>elículas</span>
+                            </Link>
                         </li>
 
                         {store.auth ? (
                             // Si está logueado
                             <>
                                 <li className="nav-item">
-                                    <Link to="/profile" className="nav-link">Perfil</Link>
+                                    <Link to="/profile" className="nav-link">
+                                        <span className="nav-word"><span className="nav-initial">P</span>erfil</span>
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/favoritos" className="nav-link">Favoritos</Link>
+                                    <Link to="/favoritos" className="nav-link">
+                                        <span className="nav-word"><span className="nav-initial">F</span>avoritos</span>
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/watched" className="nav-link">Películas vistas</Link>
+                                    <Link to="/watched" className="nav-link">
+                                        <span className="nav-word"><span className="nav-initial">P</span>elículas</span> <span className="nav-word"><span className="nav-initial">v</span>istas</span>
+                                    </Link>
                                 </li>
-                                <button
-                                    className="btn btn-danger btn-3d"
-                                    onClick={handleLogout}
-                                >
-                                    Cerrar sesión
-                                </button>
+                                <li className="nav-item d-flex align-items-center">
+                                    <button
+                                        className="btn btn-danger btn-3d nav-btn"
+                                        onClick={handleLogout}
+                                    >
+                                        Cerrar sesión
+                                    </button>
+                                </li>
                             </>
                         ) : (
                             // Si NO está logueado
                             <>
                                 <li className="nav-item">
-                                    <Link to="/register" className="nav-link">Register</Link>
+                                    <Link to="/register" className="nav-link">
+                                        <span className="nav-word"><span className="nav-initial">R</span>egister</span>
+                                    </Link>
                                 </li>
                                 <li className="nav-tiem">
-                                    <Link to="/login" className="nav-link">Login</Link>
+                                    <Link to="/login" className="nav-link">
+                                        <span className="nav-word"><span className="nav-initial">L</span>ogin</span>
+                                    </Link>
                                 </li>
                             </>
                         )}

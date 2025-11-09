@@ -15,6 +15,7 @@ body {
   background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
   color: var(--text-main);
   font-family: var(--font-rog);
+  font-size: 17px; /* ligeramente más grande para mejorar legibilidad */
 }
 
 /* Fondo radial oscuro usado en Favorites y aplicado globalmente */
