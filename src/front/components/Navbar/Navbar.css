@@ -63,11 +63,38 @@
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
 }
 
+/* Logo con estilo mv-brand usando máscara del PNG */
+.navbar-brand .mv-brand-logo {
+  display: inline-block;
+  height: 36px;
+  width: 160px; /* ancho aproximado del logo */
+  /* Degradado consistente con .mv-brand */
+  background: linear-gradient(90deg,
+    #ff2c2c 0%,
+    #ff6a6a 25%,
+    #ff9e9e 50%,
+    #ff6a6a 75%,
+    #ff2c2c 100%
+  );
+  /* Usamos la imagen como máscara para recortar el degradado al contorno del logo */
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+}
+
 .navbar-nav .nav-link {
   padding: 0.5rem 0.75rem;
-  color: #e9ecef;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.35);
+  color: #ffffff; /* blanco puro para máximo contraste */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6); /* mayor separación del fondo */
   transition: color 0.15s ease-in-out, transform .12s ease, text-shadow .12s ease;
+}
+
+.navbar-nav .nav-link:visited {
+  color: #ffffff; /* evita el morado por defecto de enlaces visitados */
 }
 
 .navbar-nav .nav-link:hover {
@@ -77,9 +104,49 @@
 }
 
 .navbar-nav .nav-link.active {
-  color: #bb86fc;
+  color: #f0f0ff; /* tono claro con leve azul para destacar y mantener contraste */
   font-weight: 600;
-  text-shadow: 0 2px 6px rgba(187,134,252,0.35);
+  text-shadow: 0 2px 6px rgba(187,134,252,0.45);
+}
+
+/* Iniciales rojas como el botón del navbar */
+.navbar-nav .nav-link .nav-initial {
+  color: #dc3545; /* rojo del botón (Bootstrap danger) */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+/* Mantener las iniciales rojas en todos los estados de interacción */
+.navbar-nav .nav-link:hover .nav-initial,
+.navbar-nav .nav-link:focus .nav-initial,
+.navbar-nav .nav-link:active .nav-initial,
+.navbar-nav .nav-link.active .nav-initial,
+.navbar-nav .nav-link:visited .nav-initial {
+  color: #dc3545;
+}
+
+/* Alineación consistente de elementos dentro del navbar */
+.navbar-nav {
+  align-items: center; /* centra verticalmente enlaces y botón */
+}
+
+.navbar-nav .nav-item {
+  display: flex;
+  align-items: center; /* asegura que el contenido del li quede centrado */
+}
+
+.navbar-nav .nav-btn {
+  padding: 0.5rem 0.75rem; /* igual que .nav-link */
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.25rem; /* pequeña separación del enlace anterior */
+  box-shadow: none; /* sin sombra para no superponerse con la section */
+}
+
+/* Asegura que en hover/active no aparezca sombra en el navbar */
+.navbar .nav-btn:hover,
+.navbar .nav-btn:active {
+  box-shadow: none;
 }
 
 /* Botón de logout con relieve */
@@ -98,4 +165,24 @@
 .btn-3d:active {
   transform: translateY(0);
   box-shadow: 0 4px 12px rgba(220,53,69,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* Toggler del navbar con mayor contraste sobre fondo oscuro */
+.navbar-toggler {
+  border-color: rgba(255,255,255,0.55);
+  background-color: rgba(255,255,255,0.10);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+}
+
+.navbar-toggler:hover {
+  background-color: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.65);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.15rem rgba(102,178,255,0.35);
+}
+
+.navbar-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,0.90)' stroke-width='2' stroke-linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
