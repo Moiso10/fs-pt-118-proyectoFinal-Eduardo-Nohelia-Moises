@@ -80,6 +80,20 @@
   }
 }
 
+/* Marca MovieVerse con color de logo */
+.mv-brand {
+  background: linear-gradient(90deg,
+    #ff2c2c 0%,
+    #ff6a6a 25%,
+    #ff9e9e 50%,
+    #ff6a6a 75%,
+    #ff2c2c 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 
 /* === BLOQUE DE RESEÑAS MOVIEVERSE === */
 
