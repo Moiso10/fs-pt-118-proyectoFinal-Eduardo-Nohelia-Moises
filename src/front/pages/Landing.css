@@ -43,6 +43,7 @@
 .login-card {
   max-width: 380px;
   margin-inline: auto;
+  box-shadow: none !important; /* evitar overlay visual por sombra */
 }
 
 .login-card .btn + .btn {
@@ -58,6 +59,24 @@
 
 .landing-features i {
   transition: transform .2s ease, opacity .2s ease;
+}
+
+/* Asegurar que los botones del hero no se solapen en tamaños pequeños */
+.landing-hero .d-flex {
+  flex-wrap: wrap;
+}
+
+/* Igualar tamaño visual entre el link y el botón del hero */
+.hero-ctas .btn {
+  min-width: 200px;
+}
+
+/* Full width para móviles */
+@media (max-width: 576px) {
+  .hero-ctas .btn {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 .landing-features .col-md-4:hover i {
