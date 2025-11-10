@@ -116,3 +116,18 @@
     width: 100%;
   }
 }
+
+.spinner{
+   width: 1px;
+  height: 1px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top: 2px solid white;
+  border-radius: 10%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
