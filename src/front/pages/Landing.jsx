@@ -44,22 +44,22 @@ export const Landing = () => {
           <div className="container text-center">
             <div className="row justify-content-center align-items-center">
               <div className="col-md-8 col-lg-7">
-                <h1 className="display-4 mb-3">Bienvenido a MovieVerse</h1>
+                <h1 className="display-4 mb-3">Bienvenido a <span className="mv-title">Movie<span>Verse</span></span></h1>
                 <p className="lead mb-4">
-                  Descubre, guarda y disfruta de tus películas favoritas.
+                  Descubre, guarda y disfruta en <span className="mv-title">Movie<span>Verse</span></span> tus películas favoritas.
                 </p>
                 <div className="d-flex gap-2 justify-content-center">
                   <Link to="/peliculas" className="btn btn-primary btn-lg">Ver Películas</Link>
-                  <Link to="/registro" className="btn btn-primary btn-lg">Registrarse</Link>
                 </div>
               </div>
-              <div className="col-md-5 text-center mt-4 mt-md-0">
-                <div className="login-card p-4 border rounded bg-white shadow-sm">
-                  <h5 className="mb-2">¿Ya tienes cuenta?</h5>
-                  <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
-                  
+              {!store?.auth && (
+                <div className="col-md-5 text-center mt-4 mt-md-0">
+                  <div className="login-card p-4 border rounded bg-white shadow-sm">
+                    <h5 className="mb-2">¿Ya tienes cuenta?</h5>
+                    <Link to="/login" className="btn btn-dark">Iniciar Sesión</Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </section>
@@ -94,15 +94,42 @@ export const Landing = () => {
             {/* Reseñas de MovieVerse */}
             <div className="row mt-4">
               <div className="col-12 text-center mb-3">
-                <h4 className="mb-0">Reseñas de MovieVerse</h4>
+            <h4 className="mb-0">Reseñas de <span className="mv-title">Movie<span>Verse</span></span></h4>
                 <button
                   className="btn btn-outline-primary mt-2"
-                  onClick={() => setShowReviewModal(true)}
-                >
-                  Dejar reseña
-                </button>
+                 onClick={() => {
+    if (store?.auth) {
+      setShowReviewModal(true);
+    } else {
+      alert("📝 Debes iniciar sesión para dejar una reseña.");
+    }
+  }}
+>
+  Dejar reseña
+</button>
               </div>
+           
             </div>
+           {/* Contenedor de reseñas con scroll */}
+<div className="reviews-wrapper">
+  <div className="reviews-scroll">
+    {reviews.length > 0 ? (
+      reviews.map((r) => (
+        <div key={r.id} className="review-card">
+          <div className="review-header">
+            <strong>@{r.user?.email?.split("@")[0]}</strong>
+            <span className="stars">{"⭐".repeat(r.valoration)}</span>
+          </div>
+          <h6 className="review-title">{r.title}</h6>
+          <p className="review-body">{r.body}</p>
+        </div>
+      ))
+    ) : (
+      <p className="text-center text-muted">Aún no hay reseñas 😶</p>
+    )}
+  </div>
+</div>
+
           </div>
         </section>
         <Reviews

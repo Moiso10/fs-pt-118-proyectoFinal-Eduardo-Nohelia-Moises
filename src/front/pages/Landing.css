@@ -79,3 +79,94 @@
     max-width: 100%;
   }
 }
+
+/* Marca MovieVerse con color de logo */
+.mv-brand {
+  background: linear-gradient(90deg,
+    #ff2c2c 0%,
+    #ff6a6a 25%,
+    #ff9e9e 50%,
+    #ff6a6a 75%,
+    #ff2c2c 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* === BLOQUE DE RESEÑAS MOVIEVERSE === */
+
+.reviews-wrapper {
+  max-width: 900px;
+  margin: 30px auto;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reviews-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 8px;
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar elegante */
+.reviews-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.reviews-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff3366, #ff9900);
+  border-radius: 6px;
+}
+.reviews-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff6699, #ffaa33);
+}
+.reviews-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.review-card {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+.review-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.review-title {
+  font-weight: 600;
+  color: #ffd166;
+}
+
+.review-body {
+  color: #ddd;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .reviews-wrapper {
+    padding: 1rem;
+    max-width: 95%;
+  }
+  .reviews-scroll {
+    max-height: 250px;
+  }
+}

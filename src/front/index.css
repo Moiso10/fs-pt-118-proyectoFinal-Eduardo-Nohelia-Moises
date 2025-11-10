@@ -4,6 +4,7 @@
   --bg-start: #0f1115;
   --bg-end: #171a21;
   --text-main: #e9ecef;
+  --font-rog: 'Asus Rog', 'ROG Fonts', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
 html, body, #app, #root {
@@ -13,9 +14,20 @@ html, body, #app, #root {
 body {
   background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
   color: var(--text-main);
+  font-family: var(--font-rog);
+  font-size: 17px; /* ligeramente más grande para mejorar legibilidad */
 }
 
 /* Fondo radial oscuro usado en Favorites y aplicado globalmente */
 .favorites-bg {
   background: radial-gradient(circle, #0d1117 0%, #010409 100%);
+}
+
+/* Estilo reutilizable: mismo tratamiento de color que h1.title
+   Aplica rojo a "Movie" y blanco a "Verse" sin cambiar tamaños */
+.mv-title {
+  color: #ff2c2c;
+}
+.mv-title span {
+  color: #ffffff;
 }
