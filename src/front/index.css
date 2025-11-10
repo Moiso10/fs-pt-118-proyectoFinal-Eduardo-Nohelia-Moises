@@ -22,3 +22,12 @@ body {
 .favorites-bg {
   background: radial-gradient(circle, #0d1117 0%, #010409 100%);
 }
+
+/* Estilo reutilizable: mismo tratamiento de color que h1.title
+   Aplica rojo a "Movie" y blanco a "Verse" sin cambiar tamaños */
+.mv-title {
+  color: #ff2c2c;
+}
+.mv-title span {
+  color: #ffffff;
+}

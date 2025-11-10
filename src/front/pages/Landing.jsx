@@ -44,9 +44,9 @@ export const Landing = () => {
           <div className="container text-center">
             <div className="row justify-content-center align-items-center">
               <div className="col-md-8 col-lg-7">
-                <h1 className="display-4 mb-3">Bienvenido a <span className="mv-brand">MovieVerse</span></h1>
+                <h1 className="display-4 mb-3">Bienvenido a <span className="mv-title">Movie<span>Verse</span></span></h1>
                 <p className="lead mb-4">
-                  Descubre, guarda y disfruta en <span className="mv-brand">MovieVerse</span> tus películas favoritas.
+                  Descubre, guarda y disfruta en <span className="mv-title">Movie<span>Verse</span></span> tus películas favoritas.
                 </p>
                 <div className="d-flex gap-2 justify-content-center">
                   <Link to="/peliculas" className="btn btn-primary btn-lg">Ver Películas</Link>
@@ -94,7 +94,7 @@ export const Landing = () => {
             {/* Reseñas de MovieVerse */}
             <div className="row mt-4">
               <div className="col-12 text-center mb-3">
-                <h4 className="mb-0">Reseñas de <span className="mv-brand">MovieVerse</span></h4>
+            <h4 className="mb-0">Reseñas de <span className="mv-title">Movie<span>Verse</span></span></h4>
                 <button
                   className="btn btn-outline-primary mt-2"
                  onClick={() => {
