@@ -78,7 +78,9 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <h2>Perfil de Usuario</h2>
+      <h2 className="title">
+        PERFIL<span>USUARIO</span>
+      </h2>
       <div className="profile-card">
         <div className="avatar-section">
           <img src={formData.avatar} alt="Avatar" className="avatar" />
@@ -120,7 +122,7 @@ const Profile = () => {
                 dispatch({ type: "user_logged_out" });
                 navigate("/")
               }}
-              className="btn logout"
+              className="btn btn-danger btn-3d logout"
             >
               Cerrar Sesión
             </button>
