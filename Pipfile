@@ -23,6 +23,7 @@ werkzeug = "*"
 flask-migrate = "*"
 cloudinary = "*"
 colorama = "*"
+flask-mail = "*"
 
 [requires]
 python_version = "3.13"

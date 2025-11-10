@@ -109,7 +109,55 @@ userServices.deleteAccount = async () => {
 
 
 
+userServices.checkMail = async(email) =>{
 
+    try {
+
+        const resp = await fetch(url+"/api/check_mail",{
+
+            method: "POST",
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        })
+        //if(!resp.ok) throw new Error("Error check mail")
+        
+        const data = await resp.json()
+
+        return data
+        
+    } catch (error) {
+        console.log("error",error)
+        
+    }
+
+}
+
+
+userServices.updatePassword = async(newPassword , token) =>{
+  try {
+    const resp = await fetch(url + "/api/password_update",{
+      method: "PUT",
+      headers:{
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+      },
+      body: JSON.stringify({password: newPassword})
+    })
+    //if(!resp.ok) throw new Error("Error actualizando contraseña")
+
+    const data = await resp.json()
+
+    return data 
+
+  
+  } catch (error) {
+    console.log("Error", error)
+  }
+  
+  
+}
 
 
 
