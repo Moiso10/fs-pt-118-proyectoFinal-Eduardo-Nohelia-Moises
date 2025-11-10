@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Reviews.css";
 import userServices from "../../services/userServices";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
@@ -8,6 +8,33 @@ const MAX_LEN = 255;
 
 export default function Reviews({ open, onClose, onSubmitted, auth, currentUser }) {
   const {store, dispatch} = useGlobalReducer();
+
+// Estados para controlar las estadisticas del usuario y si puede dejar reseña
+  const [userStats, setUserStats] = useState({ views_count: 0, favorites_count: 0 });
+  const [isEligible, setIsEligible] = useState(false);
+
+  useEffect(() => {
+  const fetchStats = async () => {
+    if (!auth) return;
+    try {
+      const token = localStorage.getItem("token");
+      const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/stats`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await resp.json();
+      if (data.success) {
+        setUserStats(data);
+        //  minimo 10 vistas y 5 favoritos
+        setIsEligible(data.views_count >= 10 && data.favorites_count >= 5);
+      }
+    } catch (error) {
+      console.error("Error al obtener estadísticas:", error);
+    }
+  };
+  fetchStats();
+}, [auth]);
+
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -35,10 +62,10 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
 
   const handleSubmit = async () => {
     if (!auth) return;
-    if (rating < 1 || rating > 5 || !comment.trim()) {
-      setError("Selecciona entre 1 y 5 estrellas y escribe un comentario.");
-      return;
-    }
+     if (!isEligible) {
+    setError("Necesitas ver al menos 10 películas y tener 5 favoritas para dejar una reseña.");
+    return;
+  }
     setSubmitting(true);
     setError("");
     try {
@@ -72,7 +99,7 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Tu reseña de MovieVerse</h5>
+            <h5 className="modal-title">Tu reseña de <span className="mv-title">Movie<span>Verse</span></span></h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={handleCancel}></button>
           </div>
           <div className="modal-body">
@@ -125,7 +152,12 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
             {error && <div className="alert alert-danger" role="alert">{error}</div>}
           </div>
           <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={handleCancel} disabled={submitting}>Cancelar</button>
+           {!isEligible && auth && (
+  <small className="text-warning me-auto mb-2">
+    🔒 Debes tener 10 películas vistas y 5 favoritas para enviar tu reseña.
+  </small>
+)}
+
             <button className="btn btn-primary" onClick={handleSubmit} disabled={!auth || submitting}>
               {submitting ? "Enviando..." : "Enviar"}
             </button>

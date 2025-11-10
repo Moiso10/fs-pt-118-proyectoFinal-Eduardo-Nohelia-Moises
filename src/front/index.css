@@ -1,9 +1,12 @@
 /* Tema base global (oscuro) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
   --bg-start: #0f1115;
   --bg-end: #171a21;
   --text-main: #e9ecef;
+  --font-rog: 'Asus Rog', 'ROG Fonts', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-roboto: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
 html, body, #app, #root {
@@ -13,9 +16,48 @@ html, body, #app, #root {
 body {
   background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
   color: var(--text-main);
+  font-family: var(--font-roboto);
+  font-size: 17px; /* ligeramente más grande para mejorar legibilidad */
 }
 
 /* Fondo radial oscuro usado en Favorites y aplicado globalmente */
 .favorites-bg {
   background: radial-gradient(circle, #0d1117 0%, #010409 100%);
+}
+
+/* Estilo reutilizable: mismo tratamiento de color que h1.title
+   Aplica rojo a "Movie" y blanco a "Verse" sin cambiar tamaños */
+.mv-title {
+  color: #ff2c2c;
+  font-family: var(--font-rog); /* conserva ASUS ROG en MovieVerse */
+}
+.mv-title span {
+  color: #ffffff;
+}
+
+/* Efecto 3D global para botones */
+button,
+.btn {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  will-change: transform, box-shadow;
+}
+
+button:hover,
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button:active,
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Evitar estilos 3D donde no corresponden (botón de cierre Bootstrap) */
+.btn-close,
+button.btn-close {
+  box-shadow: none !important;
+  transform: none !important;
 }

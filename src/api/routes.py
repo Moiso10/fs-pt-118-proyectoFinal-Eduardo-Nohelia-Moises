@@ -604,6 +604,35 @@ def delete_reviews():
 
 
 #---------------------------------------------endpoints ReviewsMovieVerse------------------------------------------------------------
+#-------------------endpoint para obtener estadisticas del usuario---------------------------
+
+@api.route('/user/stats', methods=['GET'])
+@jwt_required()
+def get_user_stats():
+    """
+    Devuelve cuantas peliculas ha visto y cuantos favoritos tiene el usuario autenticado.
+    
+    """
+    try:
+        user_id = get_jwt_identity()
+
+        # Cuenta cuantas peliculas ha marcado como vistas
+        views_count = MoviesViews.query.filter_by(user_id=user_id).count()
+
+        # Cuenta cuantas ha marcado como favoritas
+        favorites_count = Favorites.query.filter_by(user_id=user_id).count()
+
+        return jsonify({
+            "success": True,
+            "views_count": views_count,
+            "favorites_count": favorites_count
+        }), 200
+
+    except Exception as error:
+        return jsonify({
+            "success": False,
+            "error": str(error)
+        }), 500
 
 
 #----------------endpoints para obtener todas las reseñas de movieverse---------------------------------------
@@ -623,6 +652,9 @@ def get_all_reviews_movie_verse():
     except Exception as error:
         return jsonify({'success': False, 'error':error}),500
     
+
+
+
 
 #-------------------endpoints para crear reseñas movieverse---------------------------------------------
 

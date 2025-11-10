@@ -1,13 +1,74 @@
-/* Backdrop y estados de cursor para Reviews */
-
+/* Backdrop y tema armonizado con el resto de la app */
 .reviews-backdrop {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-.star-auth {
-  cursor: pointer;
+/* Dialog y contenido en tema oscuro consistente */
+.reviews-backdrop .modal-dialog {
+  max-width: 560px;
 }
 
-.star-disabled {
-  cursor: not-allowed;
+.reviews-backdrop .modal-content {
+  background:
+    radial-gradient(900px 450px at 15% 20%, rgba(102, 178, 255, 0.10) 0%, transparent 60%),
+    radial-gradient(900px 450px at 85% 0%, rgba(187, 134, 252, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+  background-color: #1e2125; /* base oscuro (coherente con login-card) */
+  border: 1px solid #2b3035;
+  color: #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+}
+
+.reviews-backdrop .modal-header,
+.reviews-backdrop .modal-footer {
+  border-color: #2b3035;
+}
+
+.reviews-backdrop .modal-title {
+  color: #f5f7fa;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+
+/* Formularios en tema oscuro */
+.reviews-backdrop .form-label { color: #adb5bd; }
+
+.reviews-backdrop .form-control {
+  background-color: #15181d;
+  border-color: #2b3035;
+  color: #e9ecef;
+}
+.reviews-backdrop .form-control::placeholder { color: #6c757d; }
+.reviews-backdrop .form-control:focus {
+  border-color: #6ea8fe; /* azul suave */
+  box-shadow: 0 0 0 0.2rem rgba(102, 178, 255, 0.18);
+}
+
+/* Íconos de estrellas con micro-animación armonizada */
+.star-auth {
+  cursor: pointer;
+  transition: transform .12s ease, filter .12s ease;
+}
+.star-auth:hover {
+  transform: translateY(-1px) scale(1.06);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+}
+.star-disabled { cursor: not-allowed; }
+
+/* Alertas adaptadas al tema oscuro sin romper Bootstrap */
+.reviews-backdrop .alert-info {
+  background-color: rgba(13, 110, 253, 0.12);
+  border-color: rgba(13, 110, 253, 0.35);
+  color: #e9ecef;
+}
+.reviews-backdrop .alert-danger {
+  background-color: rgba(220, 53, 69, 0.12);
+  border-color: rgba(220, 53, 69, 0.35);
+  color: #e9ecef;
+}
+
+/* Mejora de legibilidad para textos muted dentro del modal */
+.reviews-backdrop .text-muted {
+  color: #adb5bd !important; /* gris claro para buen contraste en fondo oscuro */
 }
