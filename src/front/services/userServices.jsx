@@ -121,7 +121,7 @@ userServices.checkMail = async(email) =>{
             },
             body: JSON.stringify({ email })
         })
-        if(!resp.ok) throw new Error("Error check mail")
+        //if(!resp.ok) throw new Error("Error check mail")
         
         const data = await resp.json()
 
@@ -145,7 +145,7 @@ userServices.updatePassword = async(newPassword , token) =>{
       },
       body: JSON.stringify({password: newPassword})
     })
-    if(!resp.ok) throw new Error("Error actualizando contraseña")
+    //if(!resp.ok) throw new Error("Error actualizando contraseña")
 
     const data = await resp.json()
 

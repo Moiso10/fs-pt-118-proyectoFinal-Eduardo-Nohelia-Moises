@@ -17,8 +17,8 @@ const ResetPassword =() =>{
 
         try {
             const data = await userServices.updatePassword(password,token)
-            if(data.success){
-                alert("Contraseña Actualizada,Inicia Sesion")
+            if(data){
+                console.log(data)
                 navigate("/")
             }else{
                 setMessage("Error al Actualizar la contraseña")

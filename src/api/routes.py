@@ -56,13 +56,13 @@ def check_mail():
         if not user:
             return jsonify({'success': False, 'msg': 'email not found'}),404
         #creamos el token que se va a enviar y necesario para la recuperacion de la contraseña 
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=str(user.id))
         result = send_email(data['email'], token)
         print(result)
         return jsonify({'success': True, 'token': token, 'email': data['email']}), 200
     except Exception as e:
-        print('error: '+ e)
-        return jsonify({'success': False, 'msg': 'something went wrong'})
+        print('error: '+ str(e))
+        return jsonify({'success': False, 'msg': 'something went wrong'}),500
 
 
 #ruta para actualizar el password. Se consume desde la vista para hacer el reset en el front
@@ -74,9 +74,10 @@ def password_update():
         #extraemos el id del token que creamos en la linea 98
         id = get_jwt_identity()
         #buscamos usuario por id
-        user = User.query.get(id)
+        user = db.session.get(User,id)
+        hashed_password= generate_password_hash(data["password"])
         #actualizamos password del usuario
-        user.password = data['password']
+        user.password = hashed_password
         #alacenamos los cambios
         db.session.commit()
         return jsonify({'success': True, 'msg': 'Contraseña actualizada exitosamente, intente iniciar sesion'}), 200
@@ -319,7 +320,8 @@ def update_profile():
         body = request.json
         id = get_jwt_identity()
 
-        profile = db.session.get(Profile,id)
+        query=select(Profile).where(Profile.user_id == id)
+        profile = db.session.execute(query).scalar_one()
         if not profile:
             return jsonify({'success':False, 'profile':'profile not Found'})
         

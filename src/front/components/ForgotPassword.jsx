@@ -14,7 +14,7 @@ const ForgotPassword = () =>{
         e.preventDefault();
 
         const data = await userServices.checkMail(email)
-        if(data.success){
+        if(data){
             setMessage("Se ha enviando un correo con instrucciones")
         }else{
             setMessage("Correo no encontrado")
