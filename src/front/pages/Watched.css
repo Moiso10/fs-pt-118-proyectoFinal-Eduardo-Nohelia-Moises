@@ -70,3 +70,44 @@
 .btn-remove:hover {
   background-color: #b02a37;
 }
+
+.watched-search {
+  gap: 6px;
+}
+
+.watched-input {
+  width: 40%;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.watched-input::placeholder {
+  color: #aaa;
+}
+
+.watched-input:focus {
+  outline: none;
+  border-color: #e50914;
+  box-shadow: 0 0 6px rgba(229, 9, 20, 0.4);
+}
+
+.watched-btn {
+  background-color: #e50914;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.watched-btn:hover {
+  background-color: #ff1e27;
+  transform: scale(1.05);
+}
