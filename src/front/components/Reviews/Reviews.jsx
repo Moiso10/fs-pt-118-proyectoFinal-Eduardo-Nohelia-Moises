@@ -7,32 +7,32 @@ import useGlobalReducer from "../../hooks/useGlobalReducer";
 const MAX_LEN = 255;
 
 export default function Reviews({ open, onClose, onSubmitted, auth, currentUser }) {
-  const {store, dispatch} = useGlobalReducer();
+  const { store, dispatch } = useGlobalReducer();
 
-// Estados para controlar las estadisticas del usuario y si puede dejar reseña
+  // Estados para controlar las estadisticas del usuario y si puede dejar reseña
   const [userStats, setUserStats] = useState({ views_count: 0, favorites_count: 0 });
   const [isEligible, setIsEligible] = useState(false);
 
   useEffect(() => {
-  const fetchStats = async () => {
-    if (!auth) return;
-    try {
-      const token = localStorage.getItem("token");
-      const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/stats`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await resp.json();
-      if (data.success) {
-        setUserStats(data);
-        //  minimo 10 vistas y 5 favoritos
-        setIsEligible(data.views_count >= 10 && data.favorites_count >= 5);
+    const fetchStats = async () => {
+      if (!auth) return;
+      try {
+        const token = localStorage.getItem("token");
+        const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/stats`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await resp.json();
+        if (data.success) {
+          setUserStats(data);
+          //  minimo 10 vistas y 5 favoritos
+          setIsEligible(data.views_count >= 10 && data.favorites_count >= 5);
+        }
+      } catch (error) {
+        console.error("Error al obtener estadísticas:", error);
       }
-    } catch (error) {
-      console.error("Error al obtener estadísticas:", error);
-    }
-  };
-  fetchStats();
-}, [auth]);
+    };
+    fetchStats();
+  }, [auth]);
 
 
   const [rating, setRating] = useState(0);
@@ -62,10 +62,10 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
 
   const handleSubmit = async () => {
     if (!auth) return;
-     if (!isEligible) {
-    setError("Necesitas ver al menos 10 películas y tener 5 favoritas para dejar una reseña.");
-    return;
-  }
+    if (!isEligible) {
+      setError("Necesitas ver al menos 10 películas y tener 5 favoritas para dejar una reseña.");
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
@@ -152,15 +152,27 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
             {error && <div className="alert alert-danger" role="alert">{error}</div>}
           </div>
           <div className="modal-footer">
-           {!isEligible && auth && (
-  <small className="text-warning me-auto mb-2">
-    🔒 Debes tener 10 películas vistas y 5 favoritas para enviar tu reseña.
-  </small>
-)}
-
-            <button className="btn btn-primary" onClick={handleSubmit} disabled={!auth || submitting}>
+            {!isEligible && auth && (
+              <small className="text-warning me-auto mb-2">
+                🔒 Debes tener 10 películas vistas y 5 favoritas para enviar tu reseña.
+              </small>
+            )}
+               {/*Si el usuario no esta logueado no cumple con la condicion y si no selecciona estrellas
+                o no escribe comentario, el boton es gris y deshabilitado*/}
+            <button
+              className="btn btn-primary"
+              onClick={handleSubmit}
+              disabled={
+                !auth ||
+                submitting ||
+                !isEligible ||           
+                rating === 0 ||          
+                comment.trim().length === 0         
+              }
+            >
               {submitting ? "Enviando..." : "Enviar"}
             </button>
+
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ import { Loading } from "../components/Loading"; // 🌀 spinner de carga
 export const Watched = () => {
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // 🌀 para controlar el spinner
+  const [searchTerm, setSearchTerm] = useState("");
+
 
 
   useEffect(() => {
@@ -76,6 +78,12 @@ export const Watched = () => {
       console.error("💥 Error al eliminar:", err);
     }
   }
+
+  // 🔎 Filtrar películas vistas por título
+const filteredWatched = watched.filter((movie) =>
+  movie.title?.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
   if (isLoading) {
     return (
       <div className="loading-container">
@@ -87,13 +95,28 @@ export const Watched = () => {
   return (
     <div className="watched-container">
       <h1 className="title">
-        🎬PELICULAS<span>VISTAS</span>
+        PELICULAS<span>VISTAS</span>
       </h1>
+
+      {/* 🔍 Buscador */}
+<div className="watched-search text-center mb-4 d-flex justify-content-center">
+  <input
+    type="text"
+    className="watched-input"
+    placeholder="Buscar por título..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <button className="watched-btn">
+    <i className="bi bi-search">🔍</i>
+  </button>
+</div>
+
       {watched.length === 0 ? (
         <p>Aún no has visto ninguna película.</p>
       ) : (
         <div className="watched-grid">
-          {watched.map((movie) => (
+          {filteredWatched.map((movie) => (
             <Link
               key={movie.id}
               to={`/movie/${movie.tmdb_id}`}
