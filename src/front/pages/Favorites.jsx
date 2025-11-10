@@ -85,7 +85,9 @@ export const Favorites = () => {
   }
   return (
     <div className="favorites-container">
-      <h1>💖 Mis Favoritos</h1>
+      <h1 className="title">
+        💖MIS<span>FAVORITOS</span>
+      </h1>
       {favorites.length === 0 ? (
         <p>No tienes películas en favoritos aún.</p>
       ) : (

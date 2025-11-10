@@ -63,6 +63,21 @@
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
 }
 
+/* Marca textual con el mismo estilo que .mv-title */
+.navbar-brand .mv-title {
+  display: inline-block;
+  font-size: 1.65rem; /* equivalente aproximado a 36px de alto */
+  line-height: 1;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.35);
+}
+
+/* Ajuste móvil: reducir tamaño del brand para evitar desbordes */
+@media (max-width: 576px) {
+  .navbar-brand .mv-title {
+    font-size: 1.25rem;
+  }
+}
+
 /* Logo con estilo mv-brand usando máscara del PNG */
 .navbar-brand .mv-brand-logo {
   display: inline-block;
@@ -140,7 +155,7 @@
   display: inline-flex;
   align-items: center;
   margin-left: 0.25rem; /* pequeña separación del enlace anterior */
-  box-shadow: none; /* sin sombra para no superponerse con la section */
+  box-shadow: none !important; /* sin sombra para no superponerse con la section */
 }
 
 /* Asegura que en hover/active no aparezca sombra en el navbar */

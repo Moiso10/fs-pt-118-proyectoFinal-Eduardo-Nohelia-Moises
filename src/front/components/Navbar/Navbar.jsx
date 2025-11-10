@@ -21,11 +21,7 @@ export const Navbar = () => {
         <nav className="navbar navbar-expand-lg nav-3d">
             <div className="container">
                 <Link to="/" className="navbar-brand mb-0">
-                    <span
-                        className="mv-brand-logo"
-                        aria-label="MovieVerse"
-                        style={{ WebkitMaskImage: `url(${movieVerseLogo})`, maskImage: `url(${movieVerseLogo})` }}
-                    />
+                    <span className="mv-title">Movie<span>Verse</span></span>
                 </Link>
 
                 <button

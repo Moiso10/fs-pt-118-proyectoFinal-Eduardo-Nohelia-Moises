@@ -86,7 +86,9 @@ export const Watched = () => {
 
   return (
     <div className="watched-container">
-      <h1>🎬 Películas Vistas</h1>
+      <h1 className="title">
+        🎬PELICULAS<span>VISTAS</span>
+      </h1>
       {watched.length === 0 ? (
         <p>Aún no has visto ninguna película.</p>
       ) : (
