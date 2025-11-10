@@ -99,7 +99,7 @@ export default function Reviews({ open, onClose, onSubmitted, auth, currentUser 
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Tu reseña de MovieVerse</h5>
+            <h5 className="modal-title">Tu reseña de <span className="mv-title">Movie<span>Verse</span></span></h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={handleCancel}></button>
           </div>
           <div className="modal-body">
