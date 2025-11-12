@@ -24,6 +24,7 @@ flask-migrate = "*"
 cloudinary = "*"
 colorama = "*"
 flask-mail = "*"
+tomli = "*"
 
 [requires]
 python_version = "3.13"
