@@ -1,24 +1,26 @@
 /* Footer 3D theme aligned with dark palette */
 .footer-3d {
-  /* Fondo metalizado simétrico: negro → highlight blanco central → negro */
+  /* Fondo metalizado invertido con proporción 7:1 (más oscuro para legibilidad) */
   background-image:
     linear-gradient(90deg,
       #000000 0%,
       #1a1a1a 12%,
-      #3f3f3f 24%,
-      #7b7b7b 36%,
-      #fefefe 50%, /* highlight central */
-      #7b7b7b 64%,
-      #3f3f3f 76%,
+      #3b3b3b 24%,
+      #5a5a5a 36%,
+      #cfcfcf 44%,
+      #ffffff 50%, /* highlight central claro estrecho (≈12%) */
+      #cfcfcf 56%,
+      #5a5a5a 64%,
+      #3b3b3b 76%,
       #1a1a1a 88%,
       #000000 100%
     ),
     repeating-linear-gradient(
       0deg,
       rgba(255,255,255,0.06) 0px,
-      rgba(255,255,255,0.06) 0.5px,
-      rgba(0,0,0,0.06) 1px,
-      rgba(0,0,0,0.06) 1.5px
+      rgba(255,255,255,0.06) 0.6px,
+      rgba(0,0,0,0.06) 1.2px,
+      rgba(0,0,0,0.06) 1.8px
     );
   background-blend-mode: overlay;
   border-top: 1px solid #2b3035;
@@ -34,14 +36,13 @@
   position: absolute;
   left: 0; right: 0; top: -1px;
   height: 2px;
-  /* Línea superior con degradado metalizado (blanco → negro) */
-  /* Simétrico: bordes oscuros y highlight intenso en el centro */
+  /* Línea superior con degradado 7:1 (bordes oscuros → highlight claro muy estrecho) */
   background-image: linear-gradient(90deg,
     rgba(0,0,0,0.35) 0%,
     rgba(26,26,26,0.35) 12%,
     rgba(63,63,63,0.35) 24%,
     rgba(255,255,255,0.88) 48%,
-    rgba(255,255,255,1.00) 50%, /* pico de brillo aumentado */
+    rgba(255,255,255,1.00) 50%, /* pico claro en el centro */
     rgba(255,255,255,0.88) 52%,
     rgba(63,63,63,0.35) 76%,
     rgba(26,26,26,0.35) 88%,
@@ -60,8 +61,46 @@
   color: #e6edf3;
 }
 
+/* Contenedor de contenido del Footer: distribución horizontal */
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Texto del Footer para ajuste fino */
+.footer-text {
+  margin: 0.25rem 0;
+  color: #ff2c2c; /* armonía con el tema principal */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+
+/* Logo dentro del Footer: limitar tamaño y evitar desbordes */
+.footer-logo {
+  display: inline-block;
+  max-height: 40px;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 0.25rem;
+}
+
 @media (max-width: 768px) {
   .footer-3d {
     padding: 1rem 0.75rem !important;
+  }
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .footer-logo {
+    max-height: 32px;
   }
 }

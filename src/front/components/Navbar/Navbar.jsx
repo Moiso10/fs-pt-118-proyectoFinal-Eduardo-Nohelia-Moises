@@ -64,7 +64,7 @@ export const Navbar = () => {
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/watched" className="nav-link">
-                                        <span className="nav-word"><span className="nav-initial">P</span>elículas</span> <span className="nav-word"><span className="nav-initial">v</span>istas</span>
+                                        <span className="nav-word"><span className="nav-initial">P</span>elículas</span> <span className="nav-word"><span className="nav-initial">V</span>istas</span>
                                     </Link>
                                 </li>
                                 <li className="nav-item d-flex align-items-center">

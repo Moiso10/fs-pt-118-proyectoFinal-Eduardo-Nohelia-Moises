@@ -105,6 +105,8 @@
   color: #ffffff; /* blanco puro para máximo contraste */
   text-shadow: 0 1px 2px rgba(0,0,0,0.6); /* mayor separación del fondo */
   transition: color 0.15s ease-in-out, transform .12s ease, text-shadow .12s ease;
+  font-weight: 600; /* mayor grosor para mejorar legibilidad */
+  font-size: 1.1rem; /* ligeramente más grande para evitar que se vean pequeños */
 }
 
 .navbar-nav .nav-link:visited {
@@ -119,8 +121,26 @@
 
 .navbar-nav .nav-link.active {
   color: #f0f0ff; /* tono claro con leve azul para destacar y mantener contraste */
-  font-weight: 600;
+  font-weight: 700; /* activo más marcado para diferenciar del estado normal */
   text-shadow: 0 2px 6px rgba(187,134,252,0.45);
+}
+
+/* Ajuste móvil: reducir tamaño de enlaces para evitar saltos en pantallas estrechas */
+@media (max-width: 576px) {
+  .navbar-nav .nav-link {
+    font-size: 1.0rem;
+    padding: 0.5rem 0.5rem; /* reduce el padding horizontal para evitar saltos */
+  }
+  /* Compactar el espacio entre items en móviles */
+  .navbar-nav {
+    gap: 0.25rem;
+  }
+  .navbar-nav .nav-item {
+    margin: 0; /* evitar márgenes extra por item */
+  }
+  .navbar-nav .nav-btn {
+    margin-left: 0.15rem; /* separa levemente el botón del último link */
+  }
 }
 
 /* Iniciales rojas como el botón del navbar */
