@@ -1,5 +1,7 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import userServices from "../services/userServices"
+import "./ForgotPassword.css"
 
 
 
@@ -26,22 +28,26 @@ const ForgotPassword = () =>{
 
 
     return (
+        <div className="forgot-container">
+            <form onSubmit={handleSubmit} className="forgot-form">
+                <h2 className="title-form">Recuperar Contraseña</h2>
 
-        <div className="container">
-            <h2>Recuperar Contraseña</h2>
-
-            <form onSubmit={handleSubmit}>
                 <input 
-                type="email"
-                placeholder="Introduce tu correo"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                 />
-                 <button type="submit">Enviar Instrucciones</button>
-                 {message && <p>{message}</p>}
+                  type="email"
+                  placeholder="Introduce tu correo"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <button type="submit">Enviar Instrucciones</button>
+
+                {message && <p className="status-message">{message}</p>}
+
+                <p className="back-to-login">
+                  <Link to="/login" className="auth-link">Volver a iniciar sesión</Link>
+                </p>
             </form>
         </div>
-
     );
 };
 export default ForgotPassword;
