@@ -1,16 +1,16 @@
 .navbar.nav-3d {
-  /* Fondo metalizado simétrico: negro → highlight blanco central → negro */
+  /* Fondo metalizado invertido: blanco → highlight negro central → blanco */
   background-image:
     linear-gradient(90deg,
-      #000000 0%,
-      #1a1a1a 12%,
-      #3f3f3f 24%,
-      #7b7b7b 36%,
-      #fefefe 50%, /* highlight central */
-      #7b7b7b 64%,
-      #3f3f3f 76%,
-      #1a1a1a 88%,
-      #000000 100%
+      #ffffff 0%,
+      #e5e5e5 12%,
+      #c0c0c0 24%,
+      #848484 36%,
+      #010101 50%, /* highlight central oscuro */
+      #848484 64%,
+      #c0c0c0 76%,
+      #e5e5e5 88%,
+      #ffffff 100%
     ),
     repeating-linear-gradient(
       0deg,
@@ -34,18 +34,17 @@
   position: absolute;
   left: 0; right: 0; bottom: -1px;
   height: 2px;
-  /* Línea inferior con degradado metalizado (blanco → negro) */
-  /* Simétrico: bordes oscuros y highlight intenso en el centro */
+  /* Línea inferior con degradado invertido (blanco en bordes → negro en el centro) */
   background-image: linear-gradient(90deg,
-    rgba(0,0,0,0.35) 0%,
-    rgba(26,26,26,0.35) 12%,
-    rgba(63,63,63,0.35) 24%,
-    rgba(255,255,255,0.88) 48%,
-    rgba(255,255,255,1.00) 50%, /* pico de brillo aumentado */
-    rgba(255,255,255,0.88) 52%,
-    rgba(63,63,63,0.35) 76%,
-    rgba(26,26,26,0.35) 88%,
-    rgba(0,0,0,0.35) 100%
+    rgba(255,255,255,0.35) 0%,
+    rgba(229,229,229,0.35) 12%,
+    rgba(192,192,192,0.35) 24%,
+    rgba(0,0,0,0.88) 48%,
+    rgba(0,0,0,1.00) 50%, /* pico oscuro en el centro */
+    rgba(0,0,0,0.88) 52%,
+    rgba(192,192,192,0.35) 76%,
+    rgba(229,229,229,0.35) 88%,
+    rgba(255,255,255,0.35) 100%
   );
   filter: blur(0.5px);
   box-shadow: 0 0 8px rgba(255,255,255,0.22);

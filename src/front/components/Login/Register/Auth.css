@@ -90,13 +90,21 @@
 }
 
 .auth-link {
-  color: #66b2ff;
+  color: #ff2c2c; /* armonizado con el tema principal */
   text-decoration: none;
+  transition: color .15s ease, filter .12s ease;
 }
 
 .auth-link:hover {
   text-decoration: underline;
-  filter: brightness(1.1);
+  filter: brightness(1.05);
+  color: #e62525; /* tono más oscuro en hover */
+}
+
+/* Enlace "¿Olvidaste tu contraseña?" centrado bajo el formulario */
+.forgot-password {
+  margin-top: 0.75rem;
+  text-align: center;
 }
 
 /* Keyframes for subtle micro-animations */

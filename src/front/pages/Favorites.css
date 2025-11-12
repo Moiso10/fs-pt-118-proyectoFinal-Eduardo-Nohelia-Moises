@@ -1,6 +1,6 @@
 .favorites-container {
   min-height: 100vh;
-  background: radial-gradient(circle, #0d1117 0%, #010409 100%);
+  
   color: white;
   text-align: center;
   padding: 2rem;
@@ -15,8 +15,10 @@
 
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: start;
+  gap: 2rem;
   margin-top: 2rem;
 }
 
@@ -27,6 +29,7 @@
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s;
   text-align: center;
+  width: 250px;
 }
 
 .favorite-card h4 {
@@ -98,5 +101,24 @@
 .favorites-btn:hover {
   background-color: #ff1e27;
   transform: scale(1.05);
+}
+
+/* Responsive: igual que Movies (MainView) */
+@media (max-width: 992px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .favorite-card {
+    width: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+  .favorites-grid {
+    grid-template-columns: 1fr;
+  }
+  .favorite-card {
+    width: 100%;
+  }
 }
 

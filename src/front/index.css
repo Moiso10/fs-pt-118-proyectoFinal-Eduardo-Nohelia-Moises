@@ -61,3 +61,82 @@ button.btn-close {
   box-shadow: none !important;
   transform: none !important;
 }
+
+/* Color primario del tema (rojo) para botones Bootstrap */
+.btn-primary,
+a.btn.btn-primary {
+  background-color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #ff4545 !important;
+  border-color: #ff4545 !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #e02828 !important;
+  border-color: #e02828 !important;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #8c1a1a !important;
+  border-color: #8c1a1a !important;
+}
+
+/* Botón outline primario en rojo del tema */
+.btn-outline-primary,
+a.btn.btn-outline-primary {
+  color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: #ffffff !important;
+  background-color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary.active,
+.show > .btn-outline-primary.dropdown-toggle {
+  color: #ffffff !important;
+  background-color: #e02828 !important;
+  border-color: #e02828 !important;
+}
+
+.btn-outline-primary.disabled,
+.btn-outline-primary:disabled {
+  color: #8c1a1a !important;
+  border-color: #8c1a1a !important;
+  background-color: transparent !important;
+}
+
+/* Primario global: texto y bordes */
+.text-primary,
+a.text-primary {
+  color: #ff2c2c !important;
+}
+
+.border-primary {
+  border-color: #ff2c2c !important;
+}
+
+/* Fondo primario y variante de texto con fondo primario */
+.bg-primary {
+  background-color: #ff2c2c !important;
+  color: #ffffff !important;
+}
+
+.text-bg-primary {
+  background-color: #ff2c2c !important;
+  color: #ffffff !important;
+}
