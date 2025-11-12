@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from .models import db, User,Profile,MoviesViews,Favorites,Reviews,ReviewsMovieVerse
+from models import db, User,Profile,MoviesViews,Favorites,Reviews,ReviewsMovieVerse
 from flask_cors import CORS
 from sqlalchemy import select
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import cloudinary
 import cloudinary.uploader
 from flask_mail import Message
-from .mail.mailer import send_email
+from mail.mailer import send_email
 
 
 api = Blueprint('api', __name__)
