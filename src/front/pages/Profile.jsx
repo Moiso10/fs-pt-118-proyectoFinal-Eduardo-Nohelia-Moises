@@ -13,22 +13,23 @@ import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { store, dispatch } = useGlobalReducer()
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    email:store.profile.user?.email || "",
-    username:  store.profile?.username ||  "",
+    email: store.profile.user?.email || "",
+    username: store.profile?.username || "",
     avatar: store.profile?.avatar || "",
     preference: store.profile?.preference || ""
   })
 
- 
 
-  
+
+
   if (!store.profile) {
     return <p>Cargando perfil...</p>;
   }
 
-  
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,55 +39,59 @@ const Profile = () => {
 
   const handleSave = async (e) => {
     e.preventDefault()
+    setSaving(true);
 
     try {
 
       const data = await userServices.updateProfile(formData)
 
-      if (data.success) {
+      if (data) {
         dispatch({ type: "update_user_profile", payload: data.profile })
-        alert("profile update success")
+
       }
 
     } catch (error) {
       console.log("error updating profile", error)
 
+    } finally {
+      setSaving(false);
     }
 
 
   }
 
   const handleDelete = async () => {
-  if (!confirm("¿Seguro que deseas eliminar tu cuenta?")) return;
+    if (!confirm("¿Seguro que deseas eliminar tu cuenta?")) return;
 
-  try {
-    const data = await userServices.deleteAccount();
+    try {
+      const data = await userServices.deleteAccount();
 
       localStorage.removeItem("token");
       dispatch({ type: "user_logged_out" });
       navigate("/login");
-   
-  } catch (error) {
-    console.log("Error eliminando la cuenta", error);
-  }
-  
-};
 
-  
+    } catch (error) {
+      console.log("Error eliminando la cuenta", error);
+    }
+
+  };
+
+
 
 
 
   return (
     <div className="profile-container">
-      <h2>Perfil de Usuario</h2>
+      <h2 className="title">
+        PERFIL<span>USUARIO</span>
+      </h2>
       <div className="profile-card">
         <div className="avatar-section">
-          <img src={formData.avatar} alt="Avatar" className="avatar" />
           <CloudinaryComponent
             onUploadSuccess={(url) => {
               setFormData({ ...formData, avatar: url });
-              alert("Imagen subida correctamente");
             }}
+            initialImage={store.profile?.avatar}
           />
           <p>Avatar</p>
         </div>
@@ -112,7 +117,16 @@ const Profile = () => {
           />
 
           <div className="buttons">
-            <button onClick={handleSave} className="btn save">Guardar Cambios</button>
+            <button onClick={handleSave} className="btn save" disabled={saving}>
+              {saving ? (
+                <>
+                  <div className="spinner"></div>
+                  Guardando...
+                </>
+              ) : (
+                "Guardar Cambios"
+              )}
+            </button>
             <button onClick={handleDelete} className="btn delete">Eliminar Cuenta</button>
             <button
               onClick={() => {
@@ -120,7 +134,7 @@ const Profile = () => {
                 dispatch({ type: "user_logged_out" });
                 navigate("/")
               }}
-              className="btn logout"
+              className="btn btn-danger btn-3d logout"
             >
               Cerrar Sesión
             </button>

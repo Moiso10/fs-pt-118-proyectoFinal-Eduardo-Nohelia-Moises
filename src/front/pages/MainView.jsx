@@ -126,7 +126,7 @@ export const MainView = () => { //crea y exporta el componente MainView
     <div className="mainview-container">
       <header className="mainview-header">
         <h1 className="title">
-          Movie<span>Verse</span>
+          PELI<span>CULAS</span>
         </h1>
       </header>
 
@@ -178,7 +178,7 @@ export const MainView = () => { //crea y exporta el componente MainView
               <div
                 className="poster"
                 style={{
-                  backgroundImage: movie.poster_path
+                  "--bg-image": movie.poster_path
                     ? `url(https://image.tmdb.org/t/p/w500${movie.poster_path})`
                     : "url(https://via.placeholder.com/500x750?text=Sin+imagen)",
                 }}

@@ -7,6 +7,8 @@ import { Loading } from "../components/Loading"; //spinner importado
 export const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // spinner nuevo estado de carga
+  const [searchTerm, setSearchTerm] = useState("");
+
   const navigate = useNavigate();
 
   async function fetchMovieDetails(tmdb_id) {
@@ -75,6 +77,11 @@ export const Favorites = () => {
     }
   };
 
+  // 🔎 Filtrar favoritos por título
+  const filteredFavorites = favorites.filter((fav) =>
+    fav.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // Muestra el spinner mientras carga
   if (isLoading) {
     return (
@@ -85,12 +92,30 @@ export const Favorites = () => {
   }
   return (
     <div className="favorites-container">
-      <h1>💖 Mis Favoritos</h1>
+      <h1 className="title">
+        MIS<span>FAVORITOS</span>
+      </h1>
+{/* 🔍 Buscador igual que en películas */}
+<div className="favorites-search text-center mb-4 d-flex justify-content-center">
+  <input
+    type="text"
+    className="favorites-input"
+    placeholder="Buscar por título..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <button className="favorites-btn">
+    <i className="bi bi-search">🔍 </i>
+  </button>
+</div>
+
+
+
       {favorites.length === 0 ? (
         <p>No tienes películas en favoritos aún.</p>
       ) : (
         <div className="favorites-grid">
-          {favorites.map((fav) => (
+          {filteredFavorites.map((fav) => (
             <div
               key={fav.id}
               className="favorite-card clickable"

@@ -98,6 +98,11 @@ const Auth = ({mode}) =>{
                      </span>
                    )}
                  </div>
+                 {login && (
+          <p className="forgot-password">
+            <Link to="/forgot-password" className="auth-link">¿Olvidaste tu contraseña?</Link>
+          </p>
+        )}
 
 
 

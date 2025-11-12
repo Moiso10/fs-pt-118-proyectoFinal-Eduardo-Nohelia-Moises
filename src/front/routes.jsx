@@ -16,6 +16,8 @@ import { MainView } from "./pages/MainView";
 import { Favorites } from "./pages/Favorites";
 import { Watched } from "./pages/Watched";
 import Auth from "./components/Login/Register/Auth.jsx";
+import PasswordReset from "./pages/PasswordReset.jsx";
+import PasswordForgot from "./pages/PasswordForgot.jsx";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     // CreateRoutesFromElements function allows you to build route elements declaratively.
@@ -39,6 +41,8 @@ export const router = createBrowserRouter(
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element = {< Auth mode ="login" />} />
       <Route path="/register" element = {<Auth mode = "register" />} />
+      <Route path="/reset" element= {<PasswordReset/>} />
+      <Route path="/forgot-password" element={<PasswordForgot/>} />
   
     </Route>
   )

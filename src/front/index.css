@@ -1,10 +1,12 @@
 /* Tema base global (oscuro) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
   --bg-start: #0f1115;
   --bg-end: #171a21;
   --text-main: #e9ecef;
   --font-rog: 'Asus Rog', 'ROG Fonts', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-roboto: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
 html, body, #app, #root {
@@ -14,7 +16,7 @@ html, body, #app, #root {
 body {
   background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
   color: var(--text-main);
-  font-family: var(--font-rog);
+  font-family: var(--font-roboto);
   font-size: 17px; /* ligeramente más grande para mejorar legibilidad */
 }
 
@@ -27,7 +29,114 @@ body {
    Aplica rojo a "Movie" y blanco a "Verse" sin cambiar tamaños */
 .mv-title {
   color: #ff2c2c;
+  font-family: var(--font-rog); /* conserva ASUS ROG en MovieVerse */
 }
 .mv-title span {
   color: #ffffff;
+}
+
+/* Efecto 3D global para botones */
+button,
+.btn {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  will-change: transform, box-shadow;
+}
+
+button:hover,
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button:active,
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Evitar estilos 3D donde no corresponden (botón de cierre Bootstrap) */
+.btn-close,
+button.btn-close {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Color primario del tema (rojo) para botones Bootstrap */
+.btn-primary,
+a.btn.btn-primary {
+  background-color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #ff4545 !important;
+  border-color: #ff4545 !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #e02828 !important;
+  border-color: #e02828 !important;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #8c1a1a !important;
+  border-color: #8c1a1a !important;
+}
+
+/* Botón outline primario en rojo del tema */
+.btn-outline-primary,
+a.btn.btn-outline-primary {
+  color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: #ffffff !important;
+  background-color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary.active,
+.show > .btn-outline-primary.dropdown-toggle {
+  color: #ffffff !important;
+  background-color: #e02828 !important;
+  border-color: #e02828 !important;
+}
+
+.btn-outline-primary.disabled,
+.btn-outline-primary:disabled {
+  color: #8c1a1a !important;
+  border-color: #8c1a1a !important;
+  background-color: transparent !important;
+}
+
+/* Primario global: texto y bordes */
+.text-primary,
+a.text-primary {
+  color: #ff2c2c !important;
+}
+
+.border-primary {
+  border-color: #ff2c2c !important;
+}
+
+/* Fondo primario y variante de texto con fondo primario */
+.bg-primary {
+  background-color: #ff2c2c !important;
+  color: #ffffff !important;
+}
+
+.text-bg-primary {
+  background-color: #ff2c2c !important;
+  color: #ffffff !important;
 }

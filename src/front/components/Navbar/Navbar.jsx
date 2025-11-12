@@ -21,11 +21,7 @@ export const Navbar = () => {
         <nav className="navbar navbar-expand-lg nav-3d">
             <div className="container">
                 <Link to="/" className="navbar-brand mb-0">
-                    <span
-                        className="mv-brand-logo"
-                        aria-label="MovieVerse"
-                        style={{ WebkitMaskImage: `url(${movieVerseLogo})`, maskImage: `url(${movieVerseLogo})` }}
-                    />
+                    <span className="mv-title">Movie<span>Verse</span></span>
                 </Link>
 
                 <button
@@ -68,7 +64,7 @@ export const Navbar = () => {
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/watched" className="nav-link">
-                                        <span className="nav-word"><span className="nav-initial">P</span>elículas</span> <span className="nav-word"><span className="nav-initial">v</span>istas</span>
+                                        <span className="nav-word"><span className="nav-initial">P</span>elículas</span> <span className="nav-word"><span className="nav-initial">V</span>istas</span>
                                     </Link>
                                 </li>
                                 <li className="nav-item d-flex align-items-center">
