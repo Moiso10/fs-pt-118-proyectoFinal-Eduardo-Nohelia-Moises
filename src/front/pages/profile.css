@@ -3,6 +3,15 @@
   color: white;
   text-align: center;
   padding: 2rem;
+  min-height: calc(100vh - 64px); /* descuenta altura aproximada del navbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* centra horizontalmente */
+  justify-content: center; /* centra verticalmente */
+}
+
+.profile-container .title {
+  margin-bottom: 1.25rem; /* espacio entre título y tarjeta */
 }
 
 .profile-card {

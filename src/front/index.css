@@ -61,3 +61,31 @@ button.btn-close {
   box-shadow: none !important;
   transform: none !important;
 }
+
+/* Color primario del tema (rojo) para botones Bootstrap */
+.btn-primary,
+a.btn.btn-primary {
+  background-color: #ff2c2c !important;
+  border-color: #ff2c2c !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #ff4545 !important;
+  border-color: #ff4545 !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #e02828 !important;
+  border-color: #e02828 !important;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #8c1a1a !important;
+  border-color: #8c1a1a !important;
+}

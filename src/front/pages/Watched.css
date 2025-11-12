@@ -14,8 +14,10 @@
 
 .watched-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: start;
+  gap: 2rem;
   margin-top: 2rem;
 }
 
@@ -26,6 +28,7 @@
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s;
   text-align: center;
+  width: 250px;
 }
 
 .watched-card:hover {
@@ -110,4 +113,23 @@
 .watched-btn:hover {
   background-color: #ff1e27;
   transform: scale(1.05);
+}
+
+/* Responsive: igual que Movies (MainView) */
+@media (max-width: 992px) {
+  .watched-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .watched-card {
+    width: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+  .watched-grid {
+    grid-template-columns: 1fr;
+  }
+  .watched-card {
+    width: 100%;
+  }
 }
